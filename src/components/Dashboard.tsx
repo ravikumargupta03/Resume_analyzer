@@ -199,7 +199,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
               </div>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                 item.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-              }`} />
+              }`}>
                 {item.score}
               </div>
             </div>
