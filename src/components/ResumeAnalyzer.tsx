@@ -367,20 +367,6 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
                       <div className="flex items-center space-x-4 text-sm">
                         <div className="flex items-center space-x-1">
                           <Clock className="h-4 w-4" />
-                          <span className="font-medium">{rec.duration}</span>
-                        </div>
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          rec.priority === 'high' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {rec.priority.toUpperCase()} PRIORITY
-                        </span>
-                      </div>
-                    </div>
-                    <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" />
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
       )}
@@ -389,3 +375,8 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
 };
 
 export default ResumeAnalyzer;
+                    <div className="flex items-center">
+                      <svg className="h-5 w-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
