@@ -216,6 +216,16 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
             Analyze Another Resume
           </button>
           <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+            onClick={() => onProgress((prev: any) => ({ 
+              ...prev, 
+              roadmapCreated: true,
+              analysisData: {
+                targetRole,
+                gaps: mockAnalysisResults.gaps,
+                recommendations: mockAnalysisResults.recommendations,
+                matchPercentage: mockAnalysisResults.matchPercentage
+              }
+            }))}
             Create Learning Roadmap
           </button>
         </div>

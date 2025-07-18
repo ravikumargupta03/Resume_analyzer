@@ -13,6 +13,12 @@ import {
 
 interface LearningRoadmapProps {
   onProgress: (progress: any) => void;
+  analysisData?: {
+    targetRole: string;
+    gaps: string[];
+    recommendations: string[];
+    matchPercentage: number;
+  };
 }
 
 const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress }) => {
