@@ -31,7 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeModule, onModuleSelect })
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center space-x-2">
-            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg animate-glow">
+            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg">
               <Sparkles className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -49,13 +49,11 @@ const Navigation: React.FC<NavigationProps> = ({ activeModule, onModuleSelect })
                   onClick={() => onModuleSelect(item.id)}
                   className={`flex items-center space-x-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 group relative ${
                     activeModule === item.id
-                      ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-md scale-105'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 hover:scale-105'
+                      ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-md'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  <Icon className={`h-4 w-4 transition-transform duration-300 ${
-                    activeModule === item.id ? 'scale-110' : 'group-hover:scale-110'
-                  }`} />
+                  <Icon className="h-4 w-4" />
                   <span>{item.label}</span>
                   {activeModule === item.id && (
                     <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
