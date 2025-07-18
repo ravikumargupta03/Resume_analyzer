@@ -25,7 +25,7 @@ function App() {
       case 'resume':
         return <ResumeAnalyzer onProgress={setUserProgress} />;
       case 'roadmap':
-        return <LearningRoadmap onProgress={setUserProgress} />;
+        return <LearningRoadmap onProgress={setUserProgress} analysisData={userProgress.analysisData} />;
       case 'interview':
         return <InterviewSimulator onProgress={setUserProgress} />;
       case 'insights':

@@ -161,6 +161,13 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
                     )}
                   </div>
                   <p className="text-gray-600 mb-4 leading-relaxed">{action.description}</p>
+                  {action.module === 'roadmap' && userProgress.analysisData && (
+                    <div className="mb-3 p-2 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-blue-700">
+                        ✨ Personalized for {userProgress.analysisData.targetRole}
+                      </p>
+                    </div>
+                  )}
                   <div className="flex items-center text-blue-600 font-semibold group-hover:text-blue-700">
                     <span>Get Started</span>
                     <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-2 transition-transform duration-300" />

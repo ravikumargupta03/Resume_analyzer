@@ -168,9 +168,20 @@ const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress }) => {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Learning Roadmap</h1>
-        <p className="text-xl text-gray-600">
-          A step-by-step journey to bridge your skill gaps and land your dream job
-        </p>
+        {analysisData ? (
+          <div>
+            <p className="text-xl text-gray-600 mb-2">
+              Personalized roadmap for <span className="font-semibold text-blue-600">{analysisData.targetRole}</span>
+            </p>
+            <p className="text-gray-500">
+              Based on your resume analysis ({analysisData.matchPercentage}% match)
+            </p>
+          </div>
+        ) : (
+          <p className="text-xl text-gray-600">
+            A step-by-step journey to bridge your skill gaps and land your dream job
+          </p>
+        )}
       </div>
 
       {/* Progress Overview */}
