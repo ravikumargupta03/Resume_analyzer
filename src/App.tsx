@@ -5,6 +5,7 @@ import LearningRoadmap from './components/LearningRoadmap';
 import InterviewSimulator from './components/InterviewSimulator';
 import MarketInsights from './components/MarketInsights';
 import JobTracker from './components/JobTracker';
+import ContactUs from './components/ContactUs';
 import Navigation from './components/Navigation';
 
 function App() {
@@ -31,13 +32,15 @@ function App() {
         return <MarketInsights />;
       case 'tracker':
         return <JobTracker onProgress={setUserProgress} />;
+      case 'contact':
+        return <ContactUs />;
       default:
         return <Dashboard userProgress={userProgress} onModuleSelect={setActiveModule} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <Navigation activeModule={activeModule} onModuleSelect={setActiveModule} />
       <main className="pt-20">
         {renderActiveModule()}

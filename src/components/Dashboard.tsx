@@ -78,7 +78,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Section */}
       <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg animate-float">
           <Zap className="h-10 w-10 text-white" />
         </div>
         <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6">
@@ -104,7 +104,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
       </div>
 
       {/* Progress Overview */}
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-8 hover:shadow-2xl transition-all duration-300">
+      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 p-8 mb-8 hover:shadow-2xl transition-all duration-300">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Your Progress</h2>
@@ -113,7 +113,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
           <div className="flex items-center space-x-2">
             <div className="w-40 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
               <div 
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-out shadow-sm"
+                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-out shadow-sm animate-glow"
                 style={{ width: `${completionPercentage}%` }}
               />
             </div>
@@ -144,7 +144,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
           return (
             <div
               key={index}
-              className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
+              className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
               onClick={() => onModuleSelect(action.module)}
             >
               <div className="flex items-start space-x-6">
@@ -173,7 +173,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-100 p-8">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Recent Activity</h2>
