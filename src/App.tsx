@@ -18,6 +18,19 @@ function App() {
     skillsLearned: 0
   });
 
+  // Listen for navigation events
+  React.useEffect(() => {
+    const handleNavigateToRoadmap = () => {
+      setActiveModule('roadmap');
+    };
+    
+    window.addEventListener('navigate-to-roadmap', handleNavigateToRoadmap);
+    
+    return () => {
+      window.removeEventListener('navigate-to-roadmap', handleNavigateToRoadmap);
+    };
+  }, []);
+
   const renderActiveModule = () => {
     switch (activeModule) {
       case 'dashboard':
@@ -27,7 +40,7 @@ function App() {
       case 'roadmap':
         return <LearningRoadmap onProgress={setUserProgress} analysisData={userProgress.analysisData} />;
       case 'interview':
-        return <InterviewSimulator onProgress={setUserProgress} />;
+        return <InterviewSimulator onProgress={setUserProgress} analysisData={userProgress.analysisData} />;
       case 'insights':
         return <MarketInsights />;
       case 'tracker':

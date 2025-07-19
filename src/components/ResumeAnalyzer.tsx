@@ -109,6 +109,36 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
         mid: { minYears: 2, maxYears: 5 },
         senior: { minYears: 5, maxYears: 10 }
       }
+    },
+    'Mobile Developer': {
+      requiredSkills: ['React Native', 'Swift', 'Kotlin', 'iOS', 'Android'],
+      preferredSkills: ['Flutter', 'Xamarin', 'Firebase', 'App Store', 'Mobile UI'],
+      experienceAreas: ['mobile development', 'app deployment', 'mobile UI/UX'],
+      seniority: {
+        junior: { minYears: 0, maxYears: 2 },
+        mid: { minYears: 2, maxYears: 5 },
+        senior: { minYears: 5, maxYears: 10 }
+      }
+    },
+    'Machine Learning Engineer': {
+      requiredSkills: ['Python', 'TensorFlow', 'PyTorch', 'Machine Learning', 'Deep Learning'],
+      preferredSkills: ['MLOps', 'Kubernetes', 'Docker', 'AWS SageMaker', 'Model Deployment'],
+      experienceAreas: ['model development', 'ML pipeline', 'model deployment'],
+      seniority: {
+        junior: { minYears: 1, maxYears: 3 },
+        mid: { minYears: 3, maxYears: 6 },
+        senior: { minYears: 6, maxYears: 10 }
+      }
+    },
+    'Cybersecurity Specialist': {
+      requiredSkills: ['Network Security', 'Penetration Testing', 'CISSP', 'Firewall', 'Incident Response'],
+      preferredSkills: ['Ethical Hacking', 'SIEM', 'Compliance', 'Risk Assessment', 'Forensics'],
+      experienceAreas: ['security assessment', 'threat analysis', 'security implementation'],
+      seniority: {
+        junior: { minYears: 1, maxYears: 3 },
+        mid: { minYears: 3, maxYears: 6 },
+        senior: { minYears: 6, maxYears: 10 }
+      }
     }
   };
 
@@ -485,18 +515,24 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
             Analyze Another Resume
           </button>
           <button 
-            onClick={() => onProgress((prev: any) => ({ 
-              ...prev, 
-              roadmapCreated: true,
-              analysisData: {
-                targetRole,
-                gaps: analysisResults.gaps,
-                recommendations: analysisResults.recommendations,
-                matchPercentage: analysisResults.matchPercentage,
-                skillsFound: analysisResults.skillsFound,
-                experienceLevel: analysisResults.experienceLevel
-              }
-            }))}
+            onClick={() => {
+              onProgress((prev: any) => ({ 
+                ...prev, 
+                roadmapCreated: true,
+                analysisData: {
+                  targetRole,
+                  gaps: analysisResults.gaps,
+                  recommendations: analysisResults.recommendations,
+                  matchPercentage: analysisResults.matchPercentage,
+                  skillsFound: analysisResults.skillsFound,
+                  experienceLevel: analysisResults.experienceLevel
+                }
+              }));
+              // Navigate to roadmap after a short delay
+              setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('navigate-to-roadmap'));
+              }, 100);
+            }}
             className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
           >
             <Zap className="h-5 w-5" />
@@ -596,20 +632,50 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
           <label className="block text-lg font-semibold text-gray-900 mb-4">
             Target Role
           </label>
-          <select
-            value={targetRole}
-            onChange={(e) => setTargetRole(e.target.value)}
-            className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-white"
-          >
-            <option value="">Select your target role...</option>
-            <option value="Frontend Developer">Frontend Developer</option>
-            <option value="Backend Developer">Backend Developer</option>
-            <option value="Full Stack Developer">Full Stack Developer</option>
-            <option value="DevOps Engineer">DevOps Engineer</option>
-            <option value="Data Scientist">Data Scientist</option>
-            <option value="Product Manager">Product Manager</option>
-            <option value="UI/UX Designer">UI/UX Designer</option>
-          </select>
+          <div className="space-y-4">
+            <select
+              value={targetRole}
+              onChange={(e) => setTargetRole(e.target.value)}
+              className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-white"
+            >
+              <option value="">Select your target role...</option>
+              <option value="Frontend Developer">Frontend Developer</option>
+              <option value="Backend Developer">Backend Developer</option>
+              <option value="Full Stack Developer">Full Stack Developer</option>
+              <option value="DevOps Engineer">DevOps Engineer</option>
+              <option value="Data Scientist">Data Scientist</option>
+              <option value="Product Manager">Product Manager</option>
+              <option value="UI/UX Designer">UI/UX Designer</option>
+              <option value="Mobile Developer">Mobile Developer</option>
+              <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+              <option value="Cybersecurity Specialist">Cybersecurity Specialist</option>
+            </select>
+            
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Or enter a custom role (e.g., Senior React Developer, AI Engineer)"
+                className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-white"
+                onChange={(e) => {
+                  if (e.target.value.trim()) {
+                    setTargetRole(e.target.value.trim());
+                  }
+                }}
+              />
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+            </div>
+            
+            {targetRole && !Object.keys(jobRequirements).includes(targetRole) && (
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                <p className="text-yellow-800 text-sm">
+                  <strong>Custom Role:</strong> We'll analyze your resume against general software development requirements. 
+                  For more specific analysis, select a predefined role.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Analyze Button */}

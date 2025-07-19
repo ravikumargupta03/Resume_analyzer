@@ -13,48 +13,168 @@ import {
 const MarketInsights: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState('Frontend Developer');
   const [selectedLocation, setSelectedLocation] = useState('San Francisco, CA');
+  const [customRole, setCustomRole] = useState('');
+
+  // Dynamic market data based on location and role
+  const getLocationMultiplier = (location: string) => {
+    const multipliers: { [key: string]: number } = {
+      'San Francisco, CA': 1.3,
+      'New York, NY': 1.25,
+      'Seattle, WA': 1.2,
+      'Austin, TX': 1.0,
+      'Denver, CO': 0.95,
+      'Chicago, IL': 1.1,
+      'Boston, MA': 1.15,
+      'Los Angeles, CA': 1.1,
+      'Remote': 1.05
+    };
+    return multipliers[location] || 1.0;
+  };
+
+  const getDemandByLocation = (location: string) => {
+    const demands: { [key: string]: string } = {
+      'San Francisco, CA': 'Very High',
+      'New York, NY': 'Very High',
+      'Seattle, WA': 'High',
+      'Austin, TX': 'High',
+      'Denver, CO': 'Medium',
+      'Chicago, IL': 'High',
+      'Boston, MA': 'High',
+      'Los Angeles, CA': 'High',
+      'Remote': 'Very High'
+    };
+    return demands[location] || 'Medium';
+  };
+
+  const getOpeningsByLocation = (baseOpenings: number, location: string) => {
+    const locationFactors: { [key: string]: number } = {
+      'San Francisco, CA': 1.5,
+      'New York, NY': 1.4,
+      'Seattle, WA': 1.2,
+      'Austin, TX': 1.0,
+      'Denver, CO': 0.7,
+      'Chicago, IL': 1.1,
+      'Boston, MA': 1.0,
+      'Los Angeles, CA': 1.2,
+      'Remote': 2.0
+    };
+    return Math.round(baseOpenings * (locationFactors[location] || 1.0));
+  };
 
   const marketData = {
     'Frontend Developer': {
-      averageSalary: 125000,
+      averageSalary: Math.round(125000 * getLocationMultiplier(selectedLocation)),
       salaryRange: { min: 95000, max: 165000 },
-      demand: 'High',
+      demand: getDemandByLocation(selectedLocation),
       growth: '+15%',
-      openings: 2847,
+      openings: getOpeningsByLocation(2847, selectedLocation),
       topSkills: ['React', 'TypeScript', 'JavaScript', 'CSS', 'Node.js'],
       topCompanies: ['Google', 'Meta', 'Netflix', 'Stripe', 'Airbnb'],
       experience: {
-        'Junior (0-2 years)': { salary: 85000, openings: 850 },
-        'Mid-level (3-5 years)': { salary: 125000, openings: 1200 },
-        'Senior (5+ years)': { salary: 165000, openings: 797 }
+        'Junior (0-2 years)': { 
+          salary: Math.round(85000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(850, selectedLocation) 
+        },
+        'Mid-level (3-5 years)': { 
+          salary: Math.round(125000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(1200, selectedLocation) 
+        },
+        'Senior (5+ years)': { 
+          salary: Math.round(165000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(797, selectedLocation) 
+        }
       }
     },
     'Backend Developer': {
-      averageSalary: 135000,
+      averageSalary: Math.round(135000 * getLocationMultiplier(selectedLocation)),
       salaryRange: { min: 105000, max: 180000 },
-      demand: 'Very High',
+      demand: getDemandByLocation(selectedLocation),
       growth: '+22%',
-      openings: 3254,
+      openings: getOpeningsByLocation(3254, selectedLocation),
       topSkills: ['Python', 'Java', 'AWS', 'Docker', 'PostgreSQL'],
       topCompanies: ['Amazon', 'Microsoft', 'Uber', 'Spotify', 'Palantir'],
       experience: {
-        'Junior (0-2 years)': { salary: 95000, openings: 980 },
-        'Mid-level (3-5 years)': { salary: 135000, openings: 1450 },
-        'Senior (5+ years)': { salary: 180000, openings: 824 }
+        'Junior (0-2 years)': { 
+          salary: Math.round(95000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(980, selectedLocation) 
+        },
+        'Mid-level (3-5 years)': { 
+          salary: Math.round(135000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(1450, selectedLocation) 
+        },
+        'Senior (5+ years)': { 
+          salary: Math.round(180000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(824, selectedLocation) 
+        }
       }
     },
     'Full Stack Developer': {
-      averageSalary: 130000,
+      averageSalary: Math.round(130000 * getLocationMultiplier(selectedLocation)),
       salaryRange: { min: 100000, max: 170000 },
-      demand: 'High',
+      demand: getDemandByLocation(selectedLocation),
       growth: '+18%',
-      openings: 2156,
+      openings: getOpeningsByLocation(2156, selectedLocation),
       topSkills: ['React', 'Node.js', 'Python', 'MongoDB', 'AWS'],
       topCompanies: ['Shopify', 'Square', 'Twilio', 'Figma', 'Notion'],
       experience: {
-        'Junior (0-2 years)': { salary: 90000, openings: 650 },
-        'Mid-level (3-5 years)': { salary: 130000, openings: 980 },
-        'Senior (5+ years)': { salary: 170000, openings: 526 }
+        'Junior (0-2 years)': { 
+          salary: Math.round(90000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(650, selectedLocation) 
+        },
+        'Mid-level (3-5 years)': { 
+          salary: Math.round(130000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(980, selectedLocation) 
+        },
+        'Senior (5+ years)': { 
+          salary: Math.round(170000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(526, selectedLocation) 
+        }
+      }
+    },
+    'DevOps Engineer': {
+      averageSalary: Math.round(140000 * getLocationMultiplier(selectedLocation)),
+      salaryRange: { min: 110000, max: 190000 },
+      demand: getDemandByLocation(selectedLocation),
+      growth: '+25%',
+      openings: getOpeningsByLocation(1890, selectedLocation),
+      topSkills: ['AWS', 'Docker', 'Kubernetes', 'Jenkins', 'Terraform'],
+      topCompanies: ['Amazon', 'Microsoft', 'Google', 'Netflix', 'Uber'],
+      experience: {
+        'Junior (0-2 years)': { 
+          salary: Math.round(100000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(450, selectedLocation) 
+        },
+        'Mid-level (3-5 years)': { 
+          salary: Math.round(140000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(890, selectedLocation) 
+        },
+        'Senior (5+ years)': { 
+          salary: Math.round(190000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(550, selectedLocation) 
+        }
+      }
+    },
+    'Data Scientist': {
+      averageSalary: Math.round(145000 * getLocationMultiplier(selectedLocation)),
+      salaryRange: { min: 115000, max: 200000 },
+      demand: getDemandByLocation(selectedLocation),
+      growth: '+20%',
+      openings: getOpeningsByLocation(1650, selectedLocation),
+      topSkills: ['Python', 'R', 'SQL', 'Machine Learning', 'TensorFlow'],
+      topCompanies: ['Google', 'Meta', 'Netflix', 'Uber', 'Airbnb'],
+      experience: {
+        'Junior (0-2 years)': { 
+          salary: Math.round(105000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(380, selectedLocation) 
+        },
+        'Mid-level (3-5 years)': { 
+          salary: Math.round(145000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(780, selectedLocation) 
+        },
+        'Senior (5+ years)': { 
+          salary: Math.round(200000 * getLocationMultiplier(selectedLocation)), 
+          openings: getOpeningsByLocation(490, selectedLocation) 
+        }
       }
     }
   };
@@ -106,10 +226,22 @@ const MarketInsights: React.FC = () => {
               onChange={(e) => setSelectedRole(e.target.value)}
               className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option>Frontend Developer</option>
-              <option>Backend Developer</option>
-              <option>Full Stack Developer</option>
+              <option value="Frontend Developer">Frontend Developer</option>
+              <option value="Backend Developer">Backend Developer</option>
+              <option value="Full Stack Developer">Full Stack Developer</option>
+              <option value="DevOps Engineer">DevOps Engineer</option>
+              <option value="Data Scientist">Data Scientist</option>
             </select>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Search className="h-5 w-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Custom role (e.g., ML Engineer)"
+              value={customRole}
+              onChange={(e) => setCustomRole(e.target.value)}
+              className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
           </div>
           <div className="flex items-center space-x-2">
             <MapPin className="h-5 w-5 text-gray-500" />
@@ -118,10 +250,15 @@ const MarketInsights: React.FC = () => {
               onChange={(e) => setSelectedLocation(e.target.value)}
               className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option>San Francisco, CA</option>
-              <option>New York, NY</option>
-              <option>Seattle, WA</option>
-              <option>Austin, TX</option>
+              <option value="San Francisco, CA">San Francisco, CA</option>
+              <option value="New York, NY">New York, NY</option>
+              <option value="Seattle, WA">Seattle, WA</option>
+              <option value="Austin, TX">Austin, TX</option>
+              <option value="Denver, CO">Denver, CO</option>
+              <option value="Chicago, IL">Chicago, IL</option>
+              <option value="Boston, MA">Boston, MA</option>
+              <option value="Los Angeles, CA">Los Angeles, CA</option>
+              <option value="Remote">Remote</option>
             </select>
           </div>
           <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
