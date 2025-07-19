@@ -23,7 +23,7 @@ interface LearningRoadmapProps {
   };
 }
 
-const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress }) => {
+const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress, analysisData }) => {
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   
   // Generate dynamic roadmap based on analysis data
@@ -240,115 +240,6 @@ const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress }) => {
   };
 
   const roadmapData = generateRoadmap();
-    {
-      phase: 'Phase 1: Foundation (Weeks 1-2)',
-      color: 'bg-blue-500',
-      tasks: [
-        {
-          id: 'ts-basics',
-          title: 'TypeScript Fundamentals',
-          description: 'Complete TypeScript crash course',
-          type: 'course',
-          duration: '8 hours',
-          platform: 'TypeScript Handbook',
-          priority: 'high',
-          skills: ['TypeScript', 'Types', 'Interfaces']
-        },
-        {
-          id: 'react-hooks',
-          title: 'Advanced React Hooks',
-          description: 'Master useEffect, useContext, and custom hooks',
-          type: 'course',
-          duration: '6 hours',
-          platform: 'React Docs',
-          priority: 'high',
-          skills: ['React', 'Hooks', 'State Management']
-        },
-        {
-          id: 'portfolio-setup',
-          title: 'Portfolio Project Setup',
-          description: 'Initialize your showcase project with TypeScript',
-          type: 'project',
-          duration: '4 hours',
-          platform: 'GitHub',
-          priority: 'medium',
-          skills: ['Project Setup', 'Git', 'TypeScript']
-        }
-      ]
-    },
-    {
-      phase: 'Phase 2: Backend & Testing (Weeks 3-4)',
-      color: 'bg-purple-500',
-      tasks: [
-        {
-          id: 'node-express',
-          title: 'Node.js & Express API',
-          description: 'Build RESTful APIs with Node.js and Express',
-          type: 'course',
-          duration: '12 hours',
-          platform: 'Node.js Docs',
-          priority: 'high',
-          skills: ['Node.js', 'Express', 'REST APIs']
-        },
-        {
-          id: 'testing-fundamentals',
-          title: 'Testing with Jest & RTL',
-          description: 'Unit and integration testing for React applications',
-          type: 'course',
-          duration: '8 hours',
-          platform: 'Testing Library',
-          priority: 'medium',
-          skills: ['Testing', 'Jest', 'React Testing Library']
-        },
-        {
-          id: 'full-stack-project',
-          title: 'Full-Stack Project',
-          description: 'Build a complete application with frontend and backend',
-          type: 'project',
-          duration: '20 hours',
-          platform: 'Personal Project',
-          priority: 'high',
-          skills: ['Full-Stack', 'API Integration', 'Database']
-        }
-      ]
-    },
-    {
-      phase: 'Phase 3: Advanced Topics (Weeks 5-6)',
-      color: 'bg-green-500',
-      tasks: [
-        {
-          id: 'system-design',
-          title: 'System Design Basics',
-          description: 'Learn scalability, caching, and architecture patterns',
-          type: 'course',
-          duration: '15 hours',
-          platform: 'System Design Primer',
-          priority: 'high',
-          skills: ['System Design', 'Scalability', 'Architecture']
-        },
-        {
-          id: 'performance-optimization',
-          title: 'Performance Optimization',
-          description: 'Optimize React apps for production',
-          type: 'course',
-          duration: '6 hours',
-          platform: 'Web.dev',
-          priority: 'medium',
-          skills: ['Performance', 'Optimization', 'Webpack']
-        },
-        {
-          id: 'deployment',
-          title: 'Deployment & DevOps',
-          description: 'Deploy your application to production',
-          type: 'project',
-          duration: '8 hours',
-          platform: 'Vercel/Netlify',
-          priority: 'medium',
-          skills: ['Deployment', 'DevOps', 'CI/CD']
-        }
-      ]
-    }
-  ];
 
   const toggleTask = (taskId: string) => {
     setCompletedTasks(prev => 
