@@ -18,13 +18,228 @@ interface LearningRoadmapProps {
     gaps: string[];
     recommendations: string[];
     matchPercentage: number;
+    skillsFound: string[];
+    experienceLevel: string;
   };
 }
 
 const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress }) => {
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   
-  const roadmapData = [
+  // Generate dynamic roadmap based on analysis data
+  const generateRoadmap = () => {
+    if (!analysisData) {
+      // Default roadmap for general frontend development
+      return [
+        {
+          phase: 'Phase 1: Foundation (Weeks 1-2)',
+          color: 'bg-blue-500',
+          tasks: [
+            {
+              id: 'ts-basics',
+              title: 'TypeScript Fundamentals',
+              description: 'Complete TypeScript crash course',
+              type: 'course',
+              duration: '8 hours',
+              platform: 'TypeScript Handbook',
+              priority: 'high',
+              skills: ['TypeScript', 'Types', 'Interfaces']
+            },
+            {
+              id: 'react-hooks',
+              title: 'Advanced React Hooks',
+              description: 'Master useEffect, useContext, and custom hooks',
+              type: 'course',
+              duration: '6 hours',
+              platform: 'React Docs',
+              priority: 'high',
+              skills: ['React', 'Hooks', 'State Management']
+            }
+          ]
+        }
+      ];
+    }
+
+    const { targetRole, gaps, recommendations, skillsFound, experienceLevel } = analysisData;
+    const roadmap = [];
+
+    // Phase 1: Address critical skill gaps
+    const phase1Tasks = [];
+    
+    // Add tasks based on missing skills
+    if (gaps.some(gap => gap.toLowerCase().includes('react'))) {
+      phase1Tasks.push({
+        id: 'react-fundamentals',
+        title: 'React Fundamentals',
+        description: 'Master React components, props, and state management',
+        type: 'course',
+        duration: '12 hours',
+        platform: 'React Official Tutorial',
+        priority: 'high',
+        skills: ['React', 'JSX', 'Components']
+      });
+    }
+
+    if (gaps.some(gap => gap.toLowerCase().includes('typescript'))) {
+      phase1Tasks.push({
+        id: 'typescript-basics',
+        title: 'TypeScript Essentials',
+        description: 'Learn TypeScript syntax, types, and interfaces',
+        type: 'course',
+        duration: '10 hours',
+        platform: 'TypeScript Handbook',
+        priority: 'high',
+        skills: ['TypeScript', 'Types', 'Interfaces']
+      });
+    }
+
+    if (gaps.some(gap => gap.toLowerCase().includes('node'))) {
+      phase1Tasks.push({
+        id: 'nodejs-fundamentals',
+        title: 'Node.js & Express',
+        description: 'Build REST APIs with Node.js and Express',
+        type: 'course',
+        duration: '15 hours',
+        platform: 'Node.js Docs',
+        priority: 'high',
+        skills: ['Node.js', 'Express', 'REST APIs']
+      });
+    }
+
+    if (gaps.some(gap => gap.toLowerCase().includes('aws') || gap.toLowerCase().includes('cloud'))) {
+      phase1Tasks.push({
+        id: 'aws-basics',
+        title: 'AWS Cloud Fundamentals',
+        description: 'Learn AWS services and cloud deployment',
+        type: 'course',
+        duration: '20 hours',
+        platform: 'AWS Training',
+        priority: 'high',
+        skills: ['AWS', 'Cloud Computing', 'Deployment']
+      });
+    }
+
+    if (gaps.some(gap => gap.toLowerCase().includes('testing'))) {
+      phase1Tasks.push({
+        id: 'testing-fundamentals',
+        title: 'Testing Best Practices',
+        description: 'Unit testing with Jest and React Testing Library',
+        type: 'course',
+        duration: '8 hours',
+        platform: 'Testing Library Docs',
+        priority: 'medium',
+        skills: ['Testing', 'Jest', 'TDD']
+      });
+    }
+
+    // Add default tasks if no specific gaps identified
+    if (phase1Tasks.length === 0) {
+      phase1Tasks.push({
+        id: 'skill-enhancement',
+        title: `Advanced ${targetRole} Skills`,
+        description: `Deepen your expertise in ${targetRole.toLowerCase()} technologies`,
+        type: 'course',
+        duration: '15 hours',
+        platform: 'Industry Resources',
+        priority: 'high',
+        skills: skillsFound.slice(0, 3)
+      });
+    }
+
+    roadmap.push({
+      phase: 'Phase 1: Skill Development (Weeks 1-3)',
+      color: 'bg-blue-500',
+      tasks: phase1Tasks
+    });
+
+    // Phase 2: Hands-on projects
+    const phase2Tasks = [
+      {
+        id: 'portfolio-project',
+        title: `${targetRole} Portfolio Project`,
+        description: `Build a comprehensive project showcasing ${targetRole.toLowerCase()} skills`,
+        type: 'project',
+        duration: '25 hours',
+        platform: 'GitHub',
+        priority: 'high',
+        skills: skillsFound.length > 0 ? skillsFound.slice(0, 4) : ['Project Management', 'Problem Solving']
+      },
+      {
+        id: 'code-review',
+        title: 'Code Quality & Best Practices',
+        description: 'Learn code review processes and industry standards',
+        type: 'course',
+        duration: '6 hours',
+        platform: 'Industry Blogs',
+        priority: 'medium',
+        skills: ['Code Quality', 'Best Practices', 'Collaboration']
+      }
+    ];
+
+    // Add experience-specific tasks
+    if (experienceLevel === 'Junior') {
+      phase2Tasks.push({
+        id: 'mentorship',
+        title: 'Find a Mentor',
+        description: 'Connect with senior developers for guidance',
+        type: 'networking',
+        duration: '2 hours',
+        platform: 'LinkedIn/Discord',
+        priority: 'medium',
+        skills: ['Networking', 'Learning', 'Growth']
+      });
+    }
+
+    roadmap.push({
+      phase: 'Phase 2: Practical Application (Weeks 4-6)',
+      color: 'bg-purple-500',
+      tasks: phase2Tasks
+    });
+
+    // Phase 3: Interview preparation
+    const phase3Tasks = [
+      {
+        id: 'interview-prep',
+        title: `${targetRole} Interview Preparation`,
+        description: 'Practice technical and behavioral interview questions',
+        type: 'practice',
+        duration: '12 hours',
+        platform: 'LeetCode/InterviewBit',
+        priority: 'high',
+        skills: ['Interview Skills', 'Problem Solving', 'Communication']
+      },
+      {
+        id: 'system-design',
+        title: 'System Design Basics',
+        description: 'Learn to design scalable systems and architectures',
+        type: 'course',
+        duration: '15 hours',
+        platform: 'System Design Primer',
+        priority: experienceLevel === 'Senior' ? 'high' : 'medium',
+        skills: ['System Design', 'Architecture', 'Scalability']
+      },
+      {
+        id: 'resume-optimization',
+        title: 'Resume & LinkedIn Optimization',
+        description: 'Update your resume and LinkedIn with new skills',
+        type: 'task',
+        duration: '4 hours',
+        platform: 'LinkedIn',
+        priority: 'high',
+        skills: ['Personal Branding', 'Networking', 'Job Search']
+      }
+    ];
+
+    roadmap.push({
+      phase: 'Phase 3: Job Readiness (Weeks 7-8)',
+      color: 'bg-green-500',
+      tasks: phase3Tasks
+    });
+
+    return roadmap;
+  };
+
+  const roadmapData = generateRoadmap();
     {
       phase: 'Phase 1: Foundation (Weeks 1-2)',
       color: 'bg-blue-500',
