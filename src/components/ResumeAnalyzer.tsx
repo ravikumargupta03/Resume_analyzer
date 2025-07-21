@@ -194,63 +194,72 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
 
   // Simulate resume text extraction and analysis
   const extractResumeContent = async (file: File): Promise<string> => {
-    // In a real implementation, you would use a PDF/DOC parser
-    // For simulation, we'll generate different content based on file name and size
-    const fileName = file.name.toLowerCase();
-    const fileSize = file.size;
-    
-    // Simulate different resume contents based on file characteristics
-    const resumeVariations = [
-      `John Doe
-      Software Engineer with 3 years of experience
-      Skills: React, JavaScript, Node.js, Python, SQL, Git, AWS
-      Experience: Frontend Developer at TechCorp (2021-2024)
-      Built responsive web applications using React and TypeScript
-      Implemented REST APIs using Node.js and Express
-      Education: BS Computer Science`,
+    try {
+      // In a real implementation, you would use a PDF/DOC parser
+      // For simulation, we'll generate different content based on file name and size
+      const fileName = file.name.toLowerCase();
+      const fileSize = file.size;
       
-      `Jane Smith
-      Senior Full Stack Developer with 5 years of experience
-      Skills: React, Angular, Vue.js, Node.js, Python, Django, PostgreSQL, Docker, Kubernetes
-      Experience: Senior Developer at StartupXYZ (2019-2024)
-      Led team of 4 developers, architected microservices
-      Deployed applications on AWS with CI/CD pipelines
-      Education: MS Software Engineering`,
+      // Simulate different resume contents based on file characteristics
+      const resumeVariations = [
+        `John Doe
+        Software Engineer with 3 years of experience
+        Skills: React, JavaScript, Node.js, Python, SQL, Git, AWS
+        Experience: Frontend Developer at TechCorp (2021-2024)
+        Built responsive web applications using React and TypeScript
+        Implemented REST APIs using Node.js and Express
+        Education: BS Computer Science`,
+        
+        `Jane Smith
+        Senior Full Stack Developer with 5 years of experience
+        Skills: React, Angular, Vue.js, Node.js, Python, Django, PostgreSQL, Docker, Kubernetes
+        Experience: Senior Developer at StartupXYZ (2019-2024)
+        Led team of 4 developers, architected microservices
+        Deployed applications on AWS with CI/CD pipelines
+        Education: MS Software Engineering`,
+        
+        `Mike Johnson
+        Junior Developer with 1 year of experience
+        Skills: HTML, CSS, JavaScript, React, Git
+        Experience: Junior Developer at WebAgency (2023-2024)
+        Developed landing pages and simple web applications
+        Collaborated with design team on UI implementation
+        Education: Bootcamp Graduate`,
+        
+        `Sarah Wilson
+        DevOps Engineer with 4 years of experience
+        Skills: AWS, Docker, Kubernetes, Jenkins, Terraform, Python, Linux, Monitoring
+        Experience: DevOps Engineer at CloudTech (2020-2024)
+        Managed infrastructure for 50+ microservices
+        Implemented CI/CD pipelines reducing deployment time by 60%
+        Education: BS Information Technology`,
+        
+        `Alex Chen
+        Data Scientist with 2 years of experience
+        Skills: Python, R, SQL, Machine Learning, TensorFlow, Pandas, Tableau
+        Experience: Data Analyst at DataCorp (2022-2024)
+        Built predictive models improving customer retention by 25%
+        Created dashboards and reports for executive team
+        Education: MS Data Science`
+      ];
       
-      `Mike Johnson
-      Junior Developer with 1 year of experience
-      Skills: HTML, CSS, JavaScript, React, Git
-      Experience: Junior Developer at WebAgency (2023-2024)
-      Developed landing pages and simple web applications
-      Collaborated with design team on UI implementation
-      Education: Bootcamp Graduate`,
-      
-      `Sarah Wilson
-      DevOps Engineer with 4 years of experience
-      Skills: AWS, Docker, Kubernetes, Jenkins, Terraform, Python, Linux, Monitoring
-      Experience: DevOps Engineer at CloudTech (2020-2024)
-      Managed infrastructure for 50+ microservices
-      Implemented CI/CD pipelines reducing deployment time by 60%
-      Education: BS Information Technology`,
-      
-      `Alex Chen
-      Data Scientist with 2 years of experience
-      Skills: Python, R, SQL, Machine Learning, TensorFlow, Pandas, Tableau
-      Experience: Data Analyst at DataCorp (2022-2024)
-      Built predictive models improving customer retention by 25%
-      Created dashboards and reports for executive team
-      Education: MS Data Science`
-    ];
-    
-    // Select variation based on file characteristics
-    const index = (fileName.charCodeAt(0) + fileSize) % resumeVariations.length;
-    return resumeVariations[index];
+      // Select variation based on file characteristics
+      const index = (fileName.charCodeAt(0) + fileSize) % resumeVariations.length;
+      return resumeVariations[index];
+    } catch (error) {
+      console.error('Error extracting resume content:', error);
+      return 'Default resume content for analysis';
+    }
   };
 
   const analyzeResume = async () => {
-    if (!uploadedFile || !targetRole) return;
+    if (!uploadedFile || !targetRole) {
+      setUploadError('Please upload a resume and select a target role.');
+      return;
+    }
     
     setIsAnalyzing(true);
+    setUploadError('');
     
     try {
       // Simulate file processing delay
@@ -262,7 +271,52 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
       // Get job requirements
       const jobReqs = jobRequirements[targetRole as keyof typeof jobRequirements];
       if (!jobReqs) {
-        throw new Error('Invalid target role');
+        // Handle custom roles with generic requirements
+        const genericReqs = {
+          requiredSkills: ['Problem Solving', 'Communication', 'Teamwork'],
+          preferredSkills: ['Leadership', 'Project Management', 'Technical Skills'],
+          experienceAreas: ['professional experience', 'project management'],
+          seniority: {
+            junior: { minYears: 0, maxYears: 2 },
+            mid: { minYears: 2, maxYears: 5 },
+            senior: { minYears: 5, maxYears: 10 }
+          }
+        };
+        
+        // Use generic requirements for custom roles
+        const foundSkills = [...genericReqs.requiredSkills, ...genericReqs.preferredSkills].filter(skill =>
+          resumeText.toLowerCase().includes(skill.toLowerCase())
+        );
+        
+        const matchPercentage = Math.round(Math.random() * 30 + 60); // 60-90% for custom roles
+        
+        const results: AnalysisResult = {
+          matchPercentage,
+          strengths: ['Professional experience in the field', 'Good communication skills'],
+          gaps: ['Consider adding more specific technical skills', 'Portfolio could showcase more projects'],
+          recommendations: [`Learn more about ${targetRole} specific technologies`, 'Build relevant portfolio projects'],
+          skillsFound: foundSkills,
+          experienceLevel: 'Mid-level',
+          industryMatch: Math.round(matchPercentage * 0.8)
+        };
+        
+        setAnalysisResults(results);
+        setAnalysisComplete(true);
+        
+        onProgress((prev: any) => ({ 
+          ...prev, 
+          resumeAnalyzed: true,
+          analysisData: {
+            targetRole,
+            gaps: results.gaps,
+            recommendations: results.recommendations,
+            matchPercentage: results.matchPercentage,
+            skillsFound: results.skillsFound,
+            experienceLevel: results.experienceLevel
+          }
+        }));
+        
+        return;
       }
       
       // Analyze skills
@@ -546,7 +600,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg animate-float">
           <FileText className="h-8 w-8 text-white" />
         </div>
         <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4">
@@ -557,7 +611,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
         </p>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+      <div className="card animate-fade-in">
         {/* File Upload Section */}
         <div className="mb-8">
           <label className="block text-lg font-semibold text-gray-900 mb-4">
@@ -566,10 +620,10 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
           
           {!uploadedFile ? (
             <div
-              className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+              className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 hover:scale-105 ${
                 dragActive 
-                  ? 'border-blue-500 bg-blue-50 scale-105' 
-                  : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                  ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 scale-105 animate-glow' 
+                  : 'border-gray-300 hover:border-blue-400 hover:bg-gradient-to-br hover:from-gray-50 hover:to-blue-50'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -583,7 +637,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               <div className="space-y-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl animate-bounce-slow">
                   <Upload className="h-8 w-8 text-blue-600" />
                 </div>
                 <div>
@@ -597,10 +651,10 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
               </div>
             </div>
           ) : (
-            <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-6">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 animate-slide-up">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-xl">
+                  <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-xl animate-bounce-slow">
                     <FileText className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
@@ -612,7 +666,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
                 </div>
                 <button
                   onClick={removeFile}
-                  className="p-2 text-gray-400 hover:text-red-600 transition-colors duration-200"
+                  className="p-2 text-gray-400 hover:text-red-600 transition-all duration-200 hover:scale-110"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -621,7 +675,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
           )}
           
           {uploadError && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div className="mt-4 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl animate-slide-up">
               <p className="text-red-700 text-sm">{uploadError}</p>
             </div>
           )}
@@ -636,7 +690,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
             <select
               value={targetRole}
               onChange={(e) => setTargetRole(e.target.value)}
-              className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-white"
+              className="input-field"
             >
               <option value="">Select your target role...</option>
               <option value="Frontend Developer">Frontend Developer</option>
@@ -655,7 +709,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
               <input
                 type="text"
                 placeholder="Or enter a custom role (e.g., Senior React Developer, AI Engineer)"
-                className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-white"
+                className="input-field"
                 onChange={(e) => {
                   if (e.target.value.trim()) {
                     setTargetRole(e.target.value.trim());
@@ -668,7 +722,7 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
             </div>
             
             {targetRole && !Object.keys(jobRequirements).includes(targetRole) && (
-              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+              <div className="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl animate-slide-up">
                 <p className="text-yellow-800 text-sm">
                   <strong>Custom Role:</strong> We'll analyze your resume against general software development requirements. 
                   For more specific analysis, select a predefined role.
@@ -683,16 +737,16 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
           <button
             onClick={analyzeResume}
             disabled={!uploadedFile || !targetRole || isAnalyzing}
-            className={`px-12 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg ${
+            className={`px-12 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-2xl ${
               uploadedFile && targetRole && !isAnalyzing
-                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 hover:shadow-xl hover:scale-105'
+                ? 'btn-primary animate-glow'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
             {isAnalyzing ? (
               <div className="flex items-center space-x-3">
                 <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                <span>Analyzing Resume...</span>
+                <span className="loading-dots">Analyzing Resume</span>
               </div>
             ) : (
               <div className="flex items-center space-x-3">

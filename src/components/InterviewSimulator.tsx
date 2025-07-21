@@ -216,34 +216,87 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
   };
 
   const generateFeedback = () => {
-    // Generate dynamic feedback based on role and analysis data
-    const baseScore = 70 + Math.floor(Math.random() * 20);
-    const matchBonus = analysisData ? Math.floor(analysisData.matchPercentage * 0.1) : 0;
+    // Generate truly dynamic feedback based on answers and analysis data
+    let baseScore = 60;
+    
+    // Analyze answer quality
+    const totalAnswerLength = answers.reduce((sum, answer) => sum + answer.length, 0);
+    const avgAnswerLength = totalAnswerLength / answers.length;
+    
+    // Score based on answer length and detail
+    if (avgAnswerLength > 200) baseScore += 15; // Detailed answers
+    else if (avgAnswerLength > 100) baseScore += 10; // Moderate detail
+    else if (avgAnswerLength > 50) baseScore += 5; // Basic answers
+    
+    // Check for technical keywords in answers
+    const technicalKeywords = ['algorithm', 'database', 'API', 'framework', 'optimization', 'testing', 'deployment'];
+    const keywordCount = answers.reduce((count, answer) => {
+      return count + technicalKeywords.filter(keyword => 
+        answer.toLowerCase().includes(keyword)
+      ).length;
+    }, 0);
+    
+    baseScore += Math.min(keywordCount * 3, 15); // Up to 15 points for technical terms
+    
+    // Bonus for STAR method indicators
+    const starKeywords = ['situation', 'task', 'action', 'result', 'challenge', 'solution'];
+    const starCount = answers.reduce((count, answer) => {
+      return count + starKeywords.filter(keyword => 
+        answer.toLowerCase().includes(keyword)
+      ).length;
+    }, 0);
+    
+    baseScore += Math.min(starCount * 2, 10); // Up to 10 points for structured answers
+    
+    // Analysis data bonus
+    const matchBonus = analysisData ? Math.floor(analysisData.matchPercentage * 0.15) : 0;
+    baseScore += matchBonus;
+    
+    // Ensure scores are within reasonable bounds
+    baseScore = Math.min(95, Math.max(45, baseScore));
     
     const scores = {
-      clarity: Math.min(95, baseScore + Math.floor(Math.random() * 15) + 5),
-      technical: Math.min(95, baseScore + matchBonus + Math.floor(Math.random() * 10)),
-      communication: Math.min(95, baseScore + Math.floor(Math.random() * 20)),
+      clarity: Math.min(95, Math.max(40, baseScore + Math.floor(Math.random() * 10) - 5)),
+      technical: Math.min(95, Math.max(40, baseScore + matchBonus + Math.floor(Math.random() * 8) - 4)),
+      communication: Math.min(95, Math.max(40, baseScore + Math.floor(Math.random() * 12) - 6)),
       overall: 0
     };
     
     scores.overall = Math.round((scores.clarity + scores.technical + scores.communication) / 3);
     
-    // Generate dynamic feedback based on analysis
+    // Generate dynamic feedback based on actual performance
     const strengths = [];
     const improvements = [];
     const nextSteps = [];
     
+    // Dynamic strengths based on scores
     if (scores.technical > 80) {
       strengths.push(`Strong technical knowledge in ${selectedRole.toLowerCase()} concepts`);
-    }
-    if (scores.clarity > 85) {
-      strengths.push('Clear and structured responses using STAR method');
-    }
-    if (scores.communication > 80) {
-      strengths.push('Confident delivery and professional tone');
+    } else if (scores.technical > 65) {
+      strengths.push(`Good understanding of ${selectedRole.toLowerCase()} fundamentals`);
     }
     
+    if (scores.clarity > 85) {
+      strengths.push('Clear and structured responses using STAR method');
+    } else if (scores.clarity > 70) {
+      strengths.push('Well-organized thoughts and logical flow');
+    }
+    
+    if (scores.communication > 80) {
+      strengths.push('Confident delivery and professional tone');
+    } else if (scores.communication > 65) {
+      strengths.push('Good communication skills and engagement');
+    }
+    
+    // Add answer-based strengths
+    if (avgAnswerLength > 150) {
+      strengths.push('Provided detailed and comprehensive responses');
+    }
+    if (keywordCount > 3) {
+      strengths.push('Demonstrated technical vocabulary and knowledge');
+    }
+    
+    // Dynamic improvements based on performance
     if (analysisData?.gaps && analysisData.gaps.length > 0) {
       improvements.push(`Consider strengthening knowledge in: ${analysisData.gaps[0].split(':')[1]?.trim() || analysisData.gaps[0]}`);
     }
@@ -253,12 +306,24 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
     if (scores.communication < 80) {
       improvements.push('Work on explaining complex concepts more simply');
     }
+    if (avgAnswerLength < 100) {
+      improvements.push('Provide more detailed examples and explanations');
+    }
+    if (starCount < 2) {
+      improvements.push('Use the STAR method more consistently for behavioral questions');
+    }
     
+    // Dynamic next steps
     nextSteps.push(`Practice more ${selectedRole.toLowerCase()} interview questions`);
     if (analysisData?.experienceLevel === 'Junior') {
       nextSteps.push('Build more hands-on projects to demonstrate skills');
     }
-    nextSteps.push('Record yourself to improve pace and clarity');
+    if (scores.communication < 75) {
+      nextSteps.push('Record yourself to improve pace and clarity');
+    }
+    if (scores.technical < 75) {
+      nextSteps.push('Review technical concepts and practice coding problems');
+    }
     
     return scores;
   };
@@ -320,31 +385,46 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
           </div>
 
           {/* Feedback Details */}
-          <div className="space-y-6">
-            <div className="bg-green-50 p-6 rounded-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="bg-green-50 p-6 rounded-2xl border border-green-200">
               <h3 className="font-semibold text-green-800 mb-2">🎉 Strengths</h3>
               <ul className="space-y-1 text-green-700">
-                <li>• Clear and structured responses using STAR method</li>
-                <li>• Good technical knowledge and examples</li>
-                <li>• Confident delivery and professional tone</li>
+                {feedback.clarity > 85 && <li>• Clear and structured responses using STAR method</li>}
+                {feedback.technical > 80 && <li>• Strong technical knowledge and examples</li>}
+                {feedback.communication > 80 && <li>• Confident delivery and professional tone</li>}
+                {answers.reduce((sum, answer) => sum + answer.length, 0) / answers.length > 150 && 
+                  <li>• Provided detailed and comprehensive responses</li>}
+                {answers.some(answer => 
+                  ['algorithm', 'database', 'API', 'framework'].some(keyword => 
+                    answer.toLowerCase().includes(keyword)
+                  )
+                ) && <li>• Demonstrated technical vocabulary and knowledge</li>}
               </ul>
             </div>
             
-            <div className="bg-yellow-50 p-6 rounded-lg">
+            <div className="bg-yellow-50 p-6 rounded-2xl border border-yellow-200">
               <h3 className="font-semibold text-yellow-800 mb-2">💡 Areas for Improvement</h3>
               <ul className="space-y-1 text-yellow-700">
-                <li>• Consider providing more specific metrics and results</li>
-                <li>• Practice explaining technical concepts more simply</li>
-                <li>• Work on reducing filler words and pauses</li>
+                {feedback.technical < 80 && <li>• Practice more {selectedRole.toLowerCase()} technical questions</li>}
+                {feedback.communication < 80 && <li>• Work on explaining complex concepts more simply</li>}
+                {answers.reduce((sum, answer) => sum + answer.length, 0) / answers.length < 100 && 
+                  <li>• Provide more detailed examples and explanations</li>}
+                {!answers.some(answer => 
+                  ['situation', 'task', 'action', 'result'].some(keyword => 
+                    answer.toLowerCase().includes(keyword)
+                  )
+                ) && <li>• Use the STAR method more consistently for behavioral questions</li>}
               </ul>
             </div>
             
-            <div className="bg-blue-50 p-6 rounded-lg">
+            <div className="bg-blue-50 p-6 rounded-2xl border border-blue-200">
               <h3 className="font-semibold text-blue-800 mb-2">🚀 Next Steps</h3>
               <ul className="space-y-1 text-blue-700">
                 <li>• Practice more {selectedRole.toLowerCase()} interview questions</li>
-                <li>• Record yourself to improve pace and clarity</li>
-                <li>• Research common questions for your target companies</li>
+                {feedback.communication < 75 && <li>• Record yourself to improve pace and clarity</li>}
+                {feedback.technical < 75 && <li>• Review technical concepts and practice coding problems</li>}
+                {analysisData?.experienceLevel === 'Junior' && <li>• Build more hands-on projects to demonstrate skills</li>}
+                <li>• Research common questions for {selectedCompany} interviews</li>
               </ul>
             </div>
           </div>

@@ -78,7 +78,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Section */}
       <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg animate-float">
           <Zap className="h-10 w-10 text-white" />
         </div>
         <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6">
@@ -104,7 +104,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
       </div>
 
       {/* Progress Overview */}
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-8">
+      <div className="card animate-fade-in mb-8">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Your Progress</h2>
@@ -113,7 +113,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
           <div className="flex items-center space-x-2">
             <div className="w-40 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
               <div 
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-out shadow-sm"
+                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-out shadow-sm animate-glow"
                 style={{ width: `${completionPercentage}%` }}
               />
             </div>
@@ -144,25 +144,26 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
           return (
             <div
               key={index}
-              className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
+              className="card card-hover cursor-pointer group animate-slide-up"
+              style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => onModuleSelect(action.module)}
             >
               <div className="flex items-start space-x-6">
-                <div className={`${action.color} rounded-2xl p-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg`}>
+                <div className={`${action.color} rounded-2xl p-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg animate-glow`}>
                   <Icon className="h-7 w-7 text-white" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
                     <h3 className="text-xl font-bold text-gray-900">{action.title}</h3>
                     {action.completed && (
-                      <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
+                      <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full animate-bounce-slow">
                         <CheckCircle className="h-4 w-4 text-green-600" />
                       </div>
                     )}
                   </div>
                   <p className="text-gray-600 mb-4 leading-relaxed">{action.description}</p>
                   {action.module === 'roadmap' && userProgress.analysisData && (
-                    <div className="mb-3 p-2 bg-blue-50 rounded-lg">
+                    <div className="mb-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
                       <p className="text-sm text-blue-700">
                         ✨ Personalized for {userProgress.analysisData.targetRole}
                       </p>
@@ -180,13 +181,13 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+      <div className="card animate-fade-in">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Recent Activity</h2>
             <p className="text-gray-600 mt-1">Your latest achievements</p>
           </div>
-          <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">View All</button>
+          <button className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:scale-105 transition-transform duration-200">View All</button>
         </div>
         <div className="space-y-6">
           {[
@@ -194,11 +195,11 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
             { action: 'Learning roadmap created', time: '1 day ago', status: 'completed', score: '5 skills' },
             { action: 'Mock interview scheduled', time: '3 days ago', status: 'pending', score: 'Tomorrow' },
           ].map((item, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors duration-200">
+            <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl hover:from-gray-100 hover:to-blue-100 transition-all duration-300 hover:scale-105">
               <div className="flex items-center space-x-4">
                 <div className={`w-3 h-3 rounded-full ${
                   item.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'
-                }`} />
+                } animate-pulse`} />
                 <div>
                   <span className="text-gray-900 font-semibold">{item.action}</span>
                   <div className="text-gray-500 text-sm">{item.time}</div>
