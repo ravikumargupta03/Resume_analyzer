@@ -12,7 +12,8 @@ import {
   Clock,
   X,
   Brain,
-  Zap
+  Zap,
+  Search
 } from 'lucide-react';
 
 interface ResumeAnalyzerProps {
