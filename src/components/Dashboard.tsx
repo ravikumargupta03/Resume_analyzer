@@ -107,8 +107,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
       <div className="card animate-fade-in mb-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Your Progress</h2>
-            <p className="text-gray-600 mt-1">Track your journey to success</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Progress</h2>
+            <p className="text-gray-600 dark:text-gray-300 mt-1">Track your journey to success</p>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-40 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
@@ -117,7 +117,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
                 style={{ width: `${completionPercentage}%` }}
               />
             </div>
-            <span className="text-lg font-bold text-gray-900">{completionPercentage}%</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-white">{completionPercentage}%</span>
           </div>
         </div>
         
@@ -130,7 +130,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
                   <Icon className="h-6 w-6 text-white" />
                 </div>
                 <div className="text-3xl font-bold text-gray-900 mb-1">{achievement.value}</div>
-                <div className="text-sm text-gray-600 font-medium">{achievement.label}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">{achievement.label}</div>
               </div>
             );
           })}
@@ -154,14 +154,14 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <h3 className="text-xl font-bold text-gray-900">{action.title}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">{action.title}</h3>
                     {action.completed && (
                       <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full animate-bounce-slow">
                         <CheckCircle className="h-4 w-4 text-green-600" />
                       </div>
                     )}
                   </div>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{action.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">{action.description}</p>
                   {action.module === 'roadmap' && userProgress.analysisData && (
                     <div className="mb-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
                       <p className="text-sm text-blue-700">
@@ -184,8 +184,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
       <div className="card animate-fade-in">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Recent Activity</h2>
-            <p className="text-gray-600 mt-1">Your latest achievements</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
+            <p className="text-gray-600 dark:text-gray-300 mt-1">Your latest achievements</p>
           </div>
           <button className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:scale-105 transition-transform duration-200">View All</button>
         </div>
@@ -201,8 +201,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
                   item.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'
                 } animate-pulse`} />
                 <div>
-                  <span className="text-gray-900 font-semibold">{item.action}</span>
-                  <div className="text-gray-500 text-sm">{item.time}</div>
+                  <span className="text-gray-900 dark:text-white font-semibold">{item.action}</span>
+                  <div className="text-gray-500 dark:text-gray-400 text-sm">{item.time}</div>
                 </div>
               </div>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
