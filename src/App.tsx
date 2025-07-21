@@ -7,9 +7,11 @@ import MarketInsights from './components/MarketInsights';
 import JobTracker from './components/JobTracker';
 import ContactUs from './components/ContactUs';
 import Navigation from './components/Navigation';
+import AIJobChatbot from './components/AIJobChatbot';
 
 function App() {
   const [activeModule, setActiveModule] = useState('dashboard');
+  const [darkMode, setDarkMode] = useState(false);
   const [userProgress, setUserProgress] = useState({
     resumeAnalyzed: false,
     roadmapCreated: false,
@@ -18,6 +20,14 @@ function App() {
     skillsLearned: 0
   });
 
+  // Dark mode effect
+  React.useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
   // Listen for navigation events
   React.useEffect(() => {
     const handleNavigateToRoadmap = () => {
@@ -53,11 +63,21 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      <Navigation activeModule={activeModule} onModuleSelect={setActiveModule} />
+    <div className={`min-h-screen transition-all duration-300 ${
+      darkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' 
+        : 'bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50'
+    }`}>
+      <Navigation 
+        activeModule={activeModule} 
+        onModuleSelect={setActiveModule}
+        darkMode={darkMode}
+        onToggleDarkMode={() => setDarkMode(!darkMode)}
+      />
       <main className="pt-20">
         {renderActiveModule()}
       </main>
+      <AIJobChatbot />
     </div>
   );
 }

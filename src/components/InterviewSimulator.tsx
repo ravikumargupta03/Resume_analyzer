@@ -9,7 +9,9 @@ import {
   Star,
   ChevronRight,
   Mic,
-  MicOff
+  MicOff,
+  Mail,
+  Send
 } from 'lucide-react';
 
 interface InterviewSimulatorProps {
@@ -34,6 +36,8 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
   const [selectedRole, setSelectedRole] = useState(analysisData?.targetRole || 'Frontend Developer');
   const [selectedCompany, setSelectedCompany] = useState('Tech Startup');
   const [selectedLevel, setSelectedLevel] = useState(analysisData?.experienceLevel || 'Mid-level (3-5 years)');
+  const [userEmail, setUserEmail] = useState('');
+  const [emailNotifications, setEmailNotifications] = useState(false);
 
   // Dynamic question generation based on role and analysis
   const generateQuestions = () => {
@@ -223,111 +227,120 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
     const totalAnswerLength = answers.reduce((sum, answer) => sum + answer.length, 0);
     const avgAnswerLength = totalAnswerLength / answers.length;
     
-    // Score based on answer length and detail
-    if (avgAnswerLength > 200) baseScore += 15; // Detailed answers
+    // Enhanced scoring based on answer quality
+    if (avgAnswerLength > 300) baseScore += 20; // Very detailed answers
+    else if (avgAnswerLength > 200) baseScore += 15; // Detailed answers
     else if (avgAnswerLength > 100) baseScore += 10; // Moderate detail
     else if (avgAnswerLength > 50) baseScore += 5; // Basic answers
+    else baseScore -= 10; // Very short answers
     
-    // Check for technical keywords in answers
-    const technicalKeywords = ['algorithm', 'database', 'API', 'framework', 'optimization', 'testing', 'deployment'];
+    // Enhanced technical keyword analysis
+    const technicalKeywords = [
+      'algorithm', 'database', 'API', 'framework', 'optimization', 'testing', 'deployment',
+      'architecture', 'scalability', 'performance', 'security', 'microservices', 'cloud',
+      'docker', 'kubernetes', 'ci/cd', 'agile', 'scrum', 'git', 'version control'
+    ];
+    
     const keywordCount = answers.reduce((count, answer) => {
       return count + technicalKeywords.filter(keyword => 
         answer.toLowerCase().includes(keyword)
       ).length;
     }, 0);
     
-    baseScore += Math.min(keywordCount * 3, 15); // Up to 15 points for technical terms
+    baseScore += Math.min(keywordCount * 2, 20); // Up to 20 points for technical terms
     
-    // Bonus for STAR method indicators
-    const starKeywords = ['situation', 'task', 'action', 'result', 'challenge', 'solution'];
+    // Enhanced STAR method detection
+    const starKeywords = [
+      'situation', 'task', 'action', 'result', 'challenge', 'solution', 'problem',
+      'implemented', 'achieved', 'improved', 'reduced', 'increased', 'led', 'managed'
+    ];
+    
     const starCount = answers.reduce((count, answer) => {
       return count + starKeywords.filter(keyword => 
         answer.toLowerCase().includes(keyword)
       ).length;
     }, 0);
     
-    baseScore += Math.min(starCount * 2, 10); // Up to 10 points for structured answers
+    baseScore += Math.min(starCount * 1.5, 15); // Up to 15 points for structured answers
+    
+    // Penalty for very generic answers
+    const genericPhrases = ['good', 'nice', 'okay', 'fine', 'yes', 'no'];
+    const genericCount = answers.reduce((count, answer) => {
+      const words = answer.toLowerCase().split(' ');
+      return count + genericPhrases.filter(phrase => words.includes(phrase)).length;
+    }, 0);
+    
+    if (genericCount > answers.length * 2) {
+      baseScore -= 15; // Penalty for too many generic responses
+    }
+    
+    // Bonus for specific examples and numbers
+    const specificityBonus = answers.reduce((bonus, answer) => {
+      const hasNumbers = /\d+/.test(answer);
+      const hasSpecificExamples = answer.toLowerCase().includes('example') || 
+                                 answer.toLowerCase().includes('instance') ||
+                                 answer.toLowerCase().includes('specifically');
+      return bonus + (hasNumbers ? 3 : 0) + (hasSpecificExamples ? 2 : 0);
+    }, 0);
+    
+    baseScore += Math.min(specificityBonus, 15);
     
     // Analysis data bonus
     const matchBonus = analysisData ? Math.floor(analysisData.matchPercentage * 0.15) : 0;
     baseScore += matchBonus;
     
     // Ensure scores are within reasonable bounds
-    baseScore = Math.min(95, Math.max(45, baseScore));
+    baseScore = Math.min(98, Math.max(35, baseScore));
     
     const scores = {
-      clarity: Math.min(95, Math.max(40, baseScore + Math.floor(Math.random() * 10) - 5)),
-      technical: Math.min(95, Math.max(40, baseScore + matchBonus + Math.floor(Math.random() * 8) - 4)),
-      communication: Math.min(95, Math.max(40, baseScore + Math.floor(Math.random() * 12) - 6)),
+      clarity: Math.min(98, Math.max(30, baseScore + (starCount > 3 ? 10 : 0) + Math.floor(Math.random() * 6) - 3)),
+      technical: Math.min(98, Math.max(30, baseScore + matchBonus + (keywordCount > 5 ? 15 : 0) + Math.floor(Math.random() * 6) - 3)),
+      communication: Math.min(98, Math.max(30, baseScore + (avgAnswerLength > 150 ? 10 : 0) + Math.floor(Math.random() * 6) - 3)),
       overall: 0
     };
     
     scores.overall = Math.round((scores.clarity + scores.technical + scores.communication) / 3);
     
-    // Generate dynamic feedback based on actual performance
-    const strengths = [];
-    const improvements = [];
-    const nextSteps = [];
-    
-    // Dynamic strengths based on scores
-    if (scores.technical > 80) {
-      strengths.push(`Strong technical knowledge in ${selectedRole.toLowerCase()} concepts`);
-    } else if (scores.technical > 65) {
-      strengths.push(`Good understanding of ${selectedRole.toLowerCase()} fundamentals`);
-    }
-    
-    if (scores.clarity > 85) {
-      strengths.push('Clear and structured responses using STAR method');
-    } else if (scores.clarity > 70) {
-      strengths.push('Well-organized thoughts and logical flow');
-    }
-    
-    if (scores.communication > 80) {
-      strengths.push('Confident delivery and professional tone');
-    } else if (scores.communication > 65) {
-      strengths.push('Good communication skills and engagement');
-    }
-    
-    // Add answer-based strengths
-    if (avgAnswerLength > 150) {
-      strengths.push('Provided detailed and comprehensive responses');
-    }
-    if (keywordCount > 3) {
-      strengths.push('Demonstrated technical vocabulary and knowledge');
-    }
-    
-    // Dynamic improvements based on performance
-    if (analysisData?.gaps && analysisData.gaps.length > 0) {
-      improvements.push(`Consider strengthening knowledge in: ${analysisData.gaps[0].split(':')[1]?.trim() || analysisData.gaps[0]}`);
-    }
-    if (scores.technical < 80) {
-      improvements.push(`Practice more ${selectedRole.toLowerCase()} technical questions`);
-    }
-    if (scores.communication < 80) {
-      improvements.push('Work on explaining complex concepts more simply');
-    }
-    if (avgAnswerLength < 100) {
-      improvements.push('Provide more detailed examples and explanations');
-    }
-    if (starCount < 2) {
-      improvements.push('Use the STAR method more consistently for behavioral questions');
-    }
-    
-    // Dynamic next steps
-    nextSteps.push(`Practice more ${selectedRole.toLowerCase()} interview questions`);
-    if (analysisData?.experienceLevel === 'Junior') {
-      nextSteps.push('Build more hands-on projects to demonstrate skills');
-    }
-    if (scores.communication < 75) {
-      nextSteps.push('Record yourself to improve pace and clarity');
-    }
-    if (scores.technical < 75) {
-      nextSteps.push('Review technical concepts and practice coding problems');
+    // Send email notification if enabled
+    if (emailNotifications && userEmail) {
+      sendEmailNotification(scores, userEmail);
     }
     
     return scores;
   };
 
+  const sendEmailNotification = async (scores: any, email: string) => {
+    try {
+      // In a real implementation, this would call your backend API
+      console.log('Sending email notification to:', email);
+      console.log('Interview results:', scores);
+      
+      // Simulate email sending
+      const emailContent = {
+        to: email,
+        subject: `Interview Results - ${selectedRole} at ${selectedCompany}`,
+        body: `
+          Congratulations on completing your mock interview!
+          
+          Overall Score: ${scores.overall}%
+          - Technical Skills: ${scores.technical}%
+          - Communication: ${scores.communication}%
+          - Clarity & Structure: ${scores.clarity}%
+          
+          Keep practicing and you'll continue to improve!
+          
+          Best regards,
+          CareerFlow AI Team
+        `
+      };
+      
+      // Here you would typically make an API call to your backend
+      // await fetch('/api/send-email', { method: 'POST', body: JSON.stringify(emailContent) });
+      
+    } catch (error) {
+      console.error('Failed to send email notification:', error);
+    }
+  };
   const feedback = sessionComplete ? generateFeedback() : null;
 
   if (sessionComplete && feedback) {
@@ -389,31 +402,37 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
             <div className="bg-green-50 p-6 rounded-2xl border border-green-200">
               <h3 className="font-semibold text-green-800 mb-2">🎉 Strengths</h3>
               <ul className="space-y-1 text-green-700">
-                {feedback.clarity > 85 && <li>• Clear and structured responses using STAR method</li>}
-                {feedback.technical > 80 && <li>• Strong technical knowledge and examples</li>}
-                {feedback.communication > 80 && <li>• Confident delivery and professional tone</li>}
+                {feedback.clarity > 85 && <li>• Excellent clarity and structured responses</li>}
+                {feedback.technical > 80 && <li>• Strong technical knowledge demonstrated</li>}
+                {feedback.communication > 80 && <li>• Outstanding communication skills</li>}
                 {answers.reduce((sum, answer) => sum + answer.length, 0) / answers.length > 150 && 
                   <li>• Provided detailed and comprehensive responses</li>}
                 {answers.some(answer => 
-                  ['algorithm', 'database', 'API', 'framework'].some(keyword => 
+                  ['algorithm', 'database', 'API', 'framework', 'architecture', 'scalability'].some(keyword => 
                     answer.toLowerCase().includes(keyword)
                   )
-                ) && <li>• Demonstrated technical vocabulary and knowledge</li>}
+                ) && <li>• Used appropriate technical vocabulary</li>}
+                {answers.some(answer => 
+                  ['situation', 'task', 'action', 'result', 'achieved', 'improved'].some(keyword => 
+                    answer.toLowerCase().includes(keyword)
+                  )
+                ) && <li>• Applied STAR method effectively</li>}
+                {answers.some(answer => /\d+/.test(answer)) && <li>• Provided specific examples with metrics</li>}
               </ul>
             </div>
             
             <div className="bg-yellow-50 p-6 rounded-2xl border border-yellow-200">
               <h3 className="font-semibold text-yellow-800 mb-2">💡 Areas for Improvement</h3>
               <ul className="space-y-1 text-yellow-700">
-                {feedback.technical < 80 && <li>• Practice more {selectedRole.toLowerCase()} technical questions</li>}
-                {feedback.communication < 80 && <li>• Work on explaining complex concepts more simply</li>}
+                {feedback.technical < 70 && <li>• Strengthen technical knowledge in {selectedRole.toLowerCase()}</li>}
+                {feedback.communication < 70 && <li>• Practice explaining concepts more clearly</li>}
+                {feedback.clarity < 70 && <li>• Use more structured response format (STAR method)</li>}
                 {answers.reduce((sum, answer) => sum + answer.length, 0) / answers.length < 100 && 
                   <li>• Provide more detailed examples and explanations</li>}
-                {!answers.some(answer => 
-                  ['situation', 'task', 'action', 'result'].some(keyword => 
-                    answer.toLowerCase().includes(keyword)
-                  )
-                ) && <li>• Use the STAR method more consistently for behavioral questions</li>}
+                {answers.reduce((sum, answer) => sum + answer.length, 0) / answers.length < 50 && 
+                  <li>• Avoid overly brief responses - elaborate on your answers</li>}
+                {!answers.some(answer => /\d+/.test(answer)) && 
+                  <li>• Include specific metrics and numbers in your examples</li>}
               </ul>
             </div>
             
@@ -421,14 +440,29 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
               <h3 className="font-semibold text-blue-800 mb-2">🚀 Next Steps</h3>
               <ul className="space-y-1 text-blue-700">
                 <li>• Practice more {selectedRole.toLowerCase()} interview questions</li>
-                {feedback.communication < 75 && <li>• Record yourself to improve pace and clarity</li>}
-                {feedback.technical < 75 && <li>• Review technical concepts and practice coding problems</li>}
+                {feedback.communication < 75 && <li>• Practice speaking clearly and at appropriate pace</li>}
+                {feedback.technical < 75 && <li>• Study core {selectedRole.toLowerCase()} concepts</li>}
                 {analysisData?.experienceLevel === 'Junior' && <li>• Build more hands-on projects to demonstrate skills</li>}
-                <li>• Research common questions for {selectedCompany} interviews</li>
+                <li>• Research {selectedCompany.toLowerCase()} specific interview processes</li>
+                <li>• Practice with mock interviews regularly</li>
               </ul>
             </div>
           </div>
 
+          {/* Email Confirmation */}
+          {emailNotifications && userEmail && (
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-8 animate-slide-up">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
+                  <Send className="h-4 w-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-green-800">Results Sent!</p>
+                  <p className="text-sm text-green-700">Interview results have been sent to {userEmail}</p>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <button
@@ -537,6 +571,38 @@ const InterviewSimulator: React.FC<InterviewSimulatorProps> = ({ onProgress, ana
             </div>
           </div>
 
+          {/* Email Notification Settings */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-8 border border-blue-200">
+            <div className="flex items-center space-x-3 mb-4">
+              <Mail className="h-6 w-6 text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Email Notifications</h3>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  id="emailNotifications"
+                  checked={emailNotifications}
+                  onChange={(e) => setEmailNotifications(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label htmlFor="emailNotifications" className="text-sm font-medium text-gray-700">
+                  Send interview results to my email
+                </label>
+              </div>
+              {emailNotifications && (
+                <div className="animate-slide-up">
+                  <input
+                    type="email"
+                    placeholder="Enter your professional email"
+                    value={userEmail}
+                    onChange={(e) => setUserEmail(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
           {/* Analysis Integration */}
           {analysisData && (
             <div className="bg-blue-50 p-6 rounded-lg mb-8">
