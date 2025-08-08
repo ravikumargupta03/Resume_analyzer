@@ -10,7 +10,8 @@ import {
   Zap,
   Users,
   Calendar,
-  Award
+  Award,
+  Video
 } from 'lucide-react';
 
 interface DashboardProps {

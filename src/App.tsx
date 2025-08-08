@@ -57,6 +57,10 @@ function App() {
         return <JobTracker onProgress={setUserProgress} />;
       case 'contact':
         return <ContactUs />;
+      case 'feedback':
+        return <UserFeedback />;
+      case 'video-interview':
+        return <VideoInterview onProgress={setUserProgress} analysisData={userProgress.analysisData} />;
       default:
         return <Dashboard userProgress={userProgress} onModuleSelect={setActiveModule} />;
     }

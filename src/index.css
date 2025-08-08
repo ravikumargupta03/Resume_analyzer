@@ -191,31 +191,42 @@
 }
 
 .dark .card {
-  @apply bg-gray-800 border-gray-700 shadow-2xl text-white;
+  @apply bg-gray-800/90 border-gray-600/50 shadow-2xl backdrop-blur-sm;
+  background: rgba(31, 41, 55, 0.95);
+  border: 1px solid rgba(75, 85, 99, 0.3);
 }
 
-.dark .card h1, .dark .card h2, .dark .card h3, .dark .card h4, .dark .card h5, .dark .card h6 {
-  @apply text-white;
-}
-
-.dark .card p {
-  @apply text-gray-200;
-}
-
-.dark .card .text-gray-900 {
-  @apply text-white;
-}
-
-.dark .card .text-gray-800 {
+.dark .card * {
   @apply text-gray-100;
 }
 
-.dark .card .text-gray-700 {
+.dark .card h1, .dark .card h2, .dark .card h3, .dark .card h4, .dark .card h5, .dark .card h6 {
+  @apply text-white font-semibold;
+}
+
+.dark .card p, .dark .card span, .dark .card div {
   @apply text-gray-200;
 }
 
-.dark .card .text-gray-600 {
-  @apply text-gray-300;
+/* Enhanced dark mode form elements */
+.dark input, .dark textarea, .dark select {
+  @apply bg-gray-700/80 border-gray-600/50 text-gray-100 placeholder-gray-400;
+  @apply focus:bg-gray-700 focus:border-blue-400 focus:ring-blue-400/30;
+}
+
+.dark button {
+  @apply text-gray-100;
+}
+
+/* Professional dark mode gradients */
+.dark .bg-gradient-to-r {
+  background: linear-gradient(to right, rgb(59 130 246 / 0.9), rgb(147 51 234 / 0.9));
+}
+
+.dark .glass-effect {
+  background: rgba(31, 41, 55, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(75, 85, 99, 0.3);
 }
 
 .card-hover {
