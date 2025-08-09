@@ -571,18 +571,6 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
           </button>
           <button 
             onClick={() => {
-              onProgress((prev: any) => ({ 
-                ...prev, 
-                roadmapCreated: true,
-                analysisData: {
-                  targetRole,
-                  gaps: analysisResults.gaps,
-                  recommendations: analysisResults.recommendations,
-                  matchPercentage: analysisResults.matchPercentage,
-                  skillsFound: analysisResults.skillsFound,
-                  experienceLevel: analysisResults.experienceLevel
-                }
-              }));
               // Navigate to roadmap after a short delay
               setTimeout(() => {
                 window.dispatchEvent(new CustomEvent('navigate-to-roadmap'));

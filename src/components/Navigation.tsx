@@ -32,7 +32,9 @@ const Navigation: React.FC<NavigationProps> = ({
     { id: 'interview', label: 'Interview Simulator', icon: MessageCircle },
     { id: 'insights', label: 'Market Insights', icon: TrendingUp },
     { id: 'tracker', label: 'Job Tracker', icon: Briefcase },
-    { id: 'video-interview', label: 'Video Interview', icon: Video },
+    { id: 'video-interview', label: 'Video Interview', icon: MessageCircle },
+    { id: 'contact', label: 'Contact Us', icon: Mail },
+    { id: 'feedback', label: 'Feedback', icon: Sparkles },
   ];
 
   return (

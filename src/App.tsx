@@ -8,6 +8,8 @@ import JobTracker from './components/JobTracker';
 import ContactUs from './components/ContactUs';
 import Navigation from './components/Navigation';
 import AIJobChatbot from './components/AIJobChatbot';
+import UserFeedback from './components/UserFeedback';
+import VideoInterview from './components/VideoInterview';
 
 function App() {
   const [activeModule, setActiveModule] = useState('dashboard');
