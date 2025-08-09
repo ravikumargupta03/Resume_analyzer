@@ -94,7 +94,6 @@ const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress, analysisD
         duration: '10 hours',
         platform: 'TypeScript Handbook',
         url: 'https://www.typescriptlang.org/docs/',
-        url: 'https://www.typescriptlang.org/docs/',
         priority: 'high',
         skills: ['TypeScript', 'Types', 'Interfaces']
       });
@@ -105,7 +104,6 @@ const LearningRoadmap: React.FC<LearningRoadmapProps> = ({ onProgress, analysisD
         id: 'nodejs-fundamentals',
         title: 'Node.js & Express',
         description: 'Build REST APIs with Node.js and Express',
-        url: 'https://react.dev/learn',
         type: 'course',
         duration: '15 hours',
         platform: 'Node.js Docs',
