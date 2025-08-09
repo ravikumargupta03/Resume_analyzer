@@ -615,7 +615,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
                 value={currentResponse}
                 onChange={(e) => setCurrentResponse(e.target.value)}
                 placeholder="You can type notes here while speaking..."
-                className="input-field h-32 resize-none"
+                className="w-full h-32 p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 resize-none"
               />
             </div>
 
