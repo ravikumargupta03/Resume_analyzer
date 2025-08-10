@@ -23,9 +23,10 @@ interface DashboardProps {
     skillsLearned: number;
   };
   onModuleSelect: (module: string) => void;
+  darkMode?: boolean;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) => {
+const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, darkMode }) => {
   const completionPercentage = Math.round(
     ((userProgress.resumeAnalyzed ? 1 : 0) +
      (userProgress.roadmapCreated ? 1 : 0) +
@@ -130,8 +131,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
                 <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${achievement.color} rounded-2xl mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-3xl font-bold text-gray-900 mb-1">{achievement.value}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">{achievement.label}</div>
+                <div className={`text-3xl font-bold mb-1 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{achievement.value}</div>
+                <div className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{achievement.label}</div>
               </div>
             );
           })}
@@ -157,15 +158,23 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
                   <div className="flex items-center space-x-2 mb-2">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">{action.title}</h3>
                     {action.completed && (
-                      <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full animate-bounce-slow">
+                    <p className={`mb-4 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{action.description}</p>
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                      </div>
-                    )}
+                      <div className={`mb-3 p-3 rounded-xl border ${
+                        darkMode 
+                          ? 'bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-blue-600/50' 
+                          : 'bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200'
+                      }`}>
+                        <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">{action.description}</p>
+                      <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{action.title}</h3>
                   {action.module === 'roadmap' && userProgress.analysisData && (
                     <div className="mb-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
-                      <p className="text-sm text-blue-700">
+                    <div className={`flex items-center font-semibold ${
+                      darkMode 
+                        ? 'text-blue-400 group-hover:text-blue-300' 
+                        : 'text-blue-600 group-hover:text-blue-700'
+                    }`}>
                         ✨ Personalized for {userProgress.analysisData.targetRole}
                       </p>
                     </div>
@@ -185,10 +194,14 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
       <div className="card animate-fade-in">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
-            <p className="text-gray-600 dark:text-gray-300 mt-1">Your latest achievements</p>
+            <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Recent Activity</h2>
+            <p className={`mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Your latest achievements</p>
           </div>
-          <button className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:scale-105 transition-transform duration-200">View All</button>
+          <button className={`font-medium text-sm hover:scale-105 transition-transform duration-200 ${
+            darkMode 
+              ? 'text-blue-400 hover:text-blue-300' 
+              : 'text-blue-600 hover:text-blue-700'
+          }`}>View All</button>
         </div>
         <div className="space-y-6">
           {[
@@ -196,18 +209,24 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect }) =
             { action: 'Learning roadmap created', time: '1 day ago', status: 'completed', score: '5 skills' },
             { action: 'Mock interview scheduled', time: '3 days ago', status: 'pending', score: 'Tomorrow' },
           ].map((item, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl hover:from-gray-100 hover:to-blue-100 transition-all duration-300 hover:scale-105">
+            <div key={index} className={`flex items-center justify-between p-4 rounded-2xl transition-all duration-300 hover:scale-105 ${
+              darkMode 
+                ? 'bg-gradient-to-r from-gray-700/50 to-blue-900/30 hover:from-gray-600/50 hover:to-blue-800/40' 
+                : 'bg-gradient-to-r from-gray-50 to-blue-50 hover:from-gray-100 hover:to-blue-100'
+            }`}>
               <div className="flex items-center space-x-4">
                 <div className={`w-3 h-3 rounded-full ${
                   item.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'
                 } animate-pulse`} />
                 <div>
-                  <span className="text-gray-900 dark:text-white font-semibold">{item.action}</span>
-                  <div className="text-gray-500 dark:text-gray-400 text-sm">{item.time}</div>
+                  <span className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{item.action}</span>
+                  <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{item.time}</div>
                 </div>
               </div>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                item.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                item.status === 'completed' 
+                  ? darkMode ? 'bg-green-900/40 text-green-300' : 'bg-green-100 text-green-800'
+                  : darkMode ? 'bg-yellow-900/40 text-yellow-300' : 'bg-yellow-100 text-yellow-800'
               }`}>
                 {item.score}
               </div>

@@ -46,7 +46,7 @@ function App() {
   const renderActiveModule = () => {
     switch (activeModule) {
       case 'dashboard':
-        return <Dashboard userProgress={userProgress} onModuleSelect={setActiveModule} />;
+        return <Dashboard userProgress={userProgress} onModuleSelect={setActiveModule} darkMode={darkMode} />;
       case 'resume':
         return <ResumeAnalyzer onProgress={setUserProgress} />;
       case 'roadmap':
@@ -64,7 +64,7 @@ function App() {
       case 'video-interview':
         return <VideoInterview onProgress={setUserProgress} analysisData={userProgress.analysisData} />;
       default:
-        return <Dashboard userProgress={userProgress} onModuleSelect={setActiveModule} />;
+        return <Dashboard userProgress={userProgress} onModuleSelect={setActiveModule} darkMode={darkMode} />;
     }
   };
 

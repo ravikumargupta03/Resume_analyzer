@@ -67,10 +67,10 @@ const Navigation: React.FC<NavigationProps> = ({
                   className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-300 group relative ${
                     activeModule === item.id
                       ? darkMode
-                        ? 'bg-gradient-to-r from-blue-900/50 to-purple-900/50 text-blue-300 shadow-md'
-                        : 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-md'
+                        ? 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white shadow-lg shadow-blue-500/25'
+                        : 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-lg'
                       : darkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                        ? 'text-gray-300 hover:text-white hover:bg-gray-700/80'
                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -78,7 +78,7 @@ const Navigation: React.FC<NavigationProps> = ({
                   <span>{item.label}</span>
                   {activeModule === item.id && (
                     <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full ${
-                      darkMode ? 'bg-blue-400' : 'bg-blue-600'
+                      darkMode ? 'bg-white' : 'bg-blue-600'
                     }`}></div>
                   )}
                 </button>
@@ -91,7 +91,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 onClick={onToggleDarkMode}
                 className={`p-3 rounded-xl transition-all duration-300 ml-2 ${
                   darkMode
-                    ? 'text-yellow-400 hover:bg-gray-800 hover:text-yellow-300'
+                    ? 'text-yellow-400 hover:bg-gray-700/80 hover:text-yellow-300 shadow-lg'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
                 title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}

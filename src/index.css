@@ -210,12 +210,24 @@
 
 /* Enhanced dark mode form elements */
 .dark input, .dark textarea, .dark select {
-  @apply bg-gray-700/80 border-gray-600/50 text-gray-100 placeholder-gray-400;
-  @apply focus:bg-gray-700 focus:border-blue-400 focus:ring-blue-400/30;
+  @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
+  @apply focus:bg-gray-700/90 focus:border-blue-400 focus:ring-blue-400/50;
+  @apply hover:border-gray-500 transition-all duration-200;
 }
 
 .dark button {
-  @apply text-gray-100;
+  @apply text-white;
+}
+
+.dark .btn-primary {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white;
+  @apply hover:from-blue-700 hover:to-purple-700;
+  @apply shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40;
+}
+
+.dark .btn-secondary {
+  @apply bg-gray-800 text-gray-200 border-gray-600;
+  @apply hover:bg-gray-700 hover:border-blue-400 hover:text-white;
 }
 
 /* Professional dark mode gradients */
@@ -224,9 +236,9 @@
 }
 
 .dark .glass-effect {
-  background: rgba(31, 41, 55, 0.8);
+  background: rgba(17, 24, 39, 0.95);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(75, 85, 99, 0.3);
+  border: 1px solid rgba(75, 85, 99, 0.5);
 }
 
 .card-hover {
@@ -239,19 +251,105 @@
 }
 
 .dark .input-field {
-  @apply bg-gray-700 border-gray-600 text-white focus:ring-blue-900 focus:border-blue-400 placeholder-gray-400;
+  @apply bg-gray-800/90 border-gray-600 text-white focus:ring-blue-500/30 focus:border-blue-400 placeholder-gray-400;
+  @apply hover:border-gray-500 hover:bg-gray-700/90;
 }
 
 .dark select {
-  @apply bg-gray-700 border-gray-600 text-white;
+  @apply bg-gray-800/90 border-gray-600 text-white;
+  @apply hover:border-gray-500 focus:border-blue-400;
 }
 
 .dark textarea {
-  @apply bg-gray-700 border-gray-600 text-white placeholder-gray-400;
+  @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
+  @apply hover:border-gray-500 focus:border-blue-400;
 }
 
 .dark input {
-  @apply bg-gray-700 border-gray-600 text-white placeholder-gray-400;
+  @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
+  @apply hover:border-gray-500 focus:border-blue-400;
+}
+
+/* Enhanced dark mode text visibility */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  @apply text-white font-semibold;
+}
+
+.dark p, .dark span, .dark div {
+  @apply text-gray-200;
+}
+
+.dark label {
+  @apply text-gray-200 font-medium;
+}
+
+/* Dark mode specific improvements */
+.dark .text-gray-900 {
+  @apply text-white;
+}
+
+.dark .text-gray-800 {
+  @apply text-gray-100;
+}
+
+.dark .text-gray-700 {
+  @apply text-gray-200;
+}
+
+.dark .text-gray-600 {
+  @apply text-gray-300;
+}
+
+.dark .text-gray-500 {
+  @apply text-gray-400;
+}
+
+/* Enhanced card styling for dark mode */
+.dark .bg-white {
+  @apply bg-gray-800/95;
+}
+
+.dark .bg-gray-50 {
+  @apply bg-gray-700/80;
+}
+
+.dark .bg-gray-100 {
+  @apply bg-gray-700/60;
+}
+
+/* Professional gradient backgrounds for dark mode */
+.dark .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, rgb(17, 24, 39), rgb(30, 41, 59), rgb(51, 65, 85));
+}
+
+/* Enhanced button styles for dark mode */
+.dark button:not(.btn-primary):not(.btn-secondary) {
+  @apply text-gray-200 hover:text-white;
+}
+
+/* Status badges in dark mode */
+.dark .bg-green-100 {
+  @apply bg-green-900/40 text-green-300;
+}
+
+.dark .bg-blue-100 {
+  @apply bg-blue-900/40 text-blue-300;
+}
+
+.dark .bg-yellow-100 {
+  @apply bg-yellow-900/40 text-yellow-300;
+}
+
+.dark .bg-red-100 {
+  @apply bg-red-900/40 text-red-300;
+}
+
+.dark .bg-purple-100 {
+  @apply bg-purple-900/40 text-purple-300;
+}
+
+.dark .bg-orange-100 {
+  @apply bg-orange-900/40 text-orange-300;
 }
 
 /* Loading animation */
