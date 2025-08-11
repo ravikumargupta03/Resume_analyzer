@@ -19,7 +19,8 @@ function App() {
     roadmapCreated: false,
     interviewsCompleted: 0,
     applicationsSubmitted: 0,
-    skillsLearned: 0
+    skillsLearned: 0,
+    recentAchievements: []
   });
 
   // Dark mode effect
