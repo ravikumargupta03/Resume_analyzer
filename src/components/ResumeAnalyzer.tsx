@@ -13,7 +13,11 @@ import {
   X,
   Brain,
   Zap,
-  Search
+  Search,
+  Shield,
+  Eye,
+  FileCheck,
+  BarChart3
 } from 'lucide-react';
 
 interface ResumeAnalyzerProps {
@@ -28,6 +32,15 @@ interface AnalysisResult {
   skillsFound: string[];
   experienceLevel: string;
   industryMatch: number;
+  atsScore: {
+    overall: number;
+    keywordDensity: number;
+    formatting: number;
+    jobAlignment: number;
+    readability: number;
+    improvements: string[];
+    passRate: 'High' | 'Medium' | 'Low';
+  };
 }
 
 const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
@@ -253,6 +266,175 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
     }
   };
 
+  // Calculate comprehensive ATS score
+  const calculateATSScore = (resumeText: string, jobReqs: any, targetRole: string) => {
+    let keywordScore = 0;
+    let formattingScore = 85; // Base formatting score
+    let alignmentScore = 0;
+    let readabilityScore = 0;
+    
+    const improvements: string[] = [];
+    
+    // 1. Keyword Density Analysis (30% weight)
+    const allRequiredSkills = [...(jobReqs?.requiredSkills || []), ...(jobReqs?.preferredSkills || [])];
+    const foundKeywords = allRequiredSkills.filter(skill => 
+      resumeText.toLowerCase().includes(skill.toLowerCase())
+    );
+    
+    keywordScore = Math.min(100, (foundKeywords.length / Math.max(allRequiredSkills.length, 1)) * 100);
+    
+    // Keyword density bonus/penalty
+    const wordCount = resumeText.split(' ').length;
+    const keywordDensity = (foundKeywords.length / wordCount) * 100;
+    
+    if (keywordDensity < 2) {
+      keywordScore -= 15;
+      improvements.push('Increase relevant keyword density (aim for 2-4% of total words)');
+    } else if (keywordDensity > 6) {
+      keywordScore -= 10;
+      improvements.push('Reduce keyword stuffing - maintain natural language flow');
+    }
+    
+    if (foundKeywords.length < 3) {
+      improvements.push(`Add more ${targetRole.toLowerCase()} specific keywords and skills`);
+    }
+    
+    // 2. Formatting Analysis (25% weight)
+    const hasEmail = /@/.test(resumeText);
+    const hasPhone = /\d{3}[-.]?\d{3}[-.]?\d{4}/.test(resumeText);
+    const hasExperience = /experience|work|job|position/i.test(resumeText);
+    const hasEducation = /education|degree|university|college/i.test(resumeText);
+    const hasSkills = /skills|technologies|tools/i.test(resumeText);
+    
+    if (!hasEmail) {
+      formattingScore -= 15;
+      improvements.push('Add a professional email address');
+    }
+    if (!hasPhone) {
+      formattingScore -= 10;
+      improvements.push('Include phone number for contact');
+    }
+    if (!hasExperience) {
+      formattingScore -= 20;
+      improvements.push('Add detailed work experience section');
+    }
+    if (!hasEducation) {
+      formattingScore -= 10;
+      improvements.push('Include education background');
+    }
+    if (!hasSkills) {
+      formattingScore -= 15;
+      improvements.push('Add a dedicated skills section');
+    }
+    
+    // Check for ATS-friendly formatting
+    const hasNumbers = /\d+/.test(resumeText);
+    const hasActionVerbs = /built|developed|implemented|managed|led|created|designed|optimized/i.test(resumeText);
+    
+    if (!hasNumbers) {
+      formattingScore -= 10;
+      improvements.push('Include quantifiable achievements with numbers and percentages');
+    }
+    if (!hasActionVerbs) {
+      formattingScore -= 15;
+      improvements.push('Use strong action verbs to describe accomplishments');
+    }
+    
+    // 3. Job Alignment Analysis (25% weight)
+    const roleKeywords = targetRole.toLowerCase().split(' ');
+    const roleAlignment = roleKeywords.filter(keyword => 
+      resumeText.toLowerCase().includes(keyword)
+    ).length;
+    
+    alignmentScore = Math.min(100, (roleAlignment / roleKeywords.length) * 100);
+    
+    // Experience level alignment
+    const experienceYears = resumeText.match(/(\d+)\s*years?\s*of\s*experience/i);
+    const years = experienceYears ? parseInt(experienceYears[1]) : 0;
+    
+    if (years === 0) {
+      alignmentScore -= 20;
+      improvements.push('Clearly state years of experience in your field');
+    }
+    
+    // Industry-specific terms
+    const industryTerms = jobReqs?.experienceAreas || [];
+    const industryMatches = industryTerms.filter((term: string) => 
+      resumeText.toLowerCase().includes(term.toLowerCase())
+    ).length;
+    
+    if (industryMatches === 0 && industryTerms.length > 0) {
+      alignmentScore -= 15;
+      improvements.push('Include more industry-specific terminology and concepts');
+    }
+    
+    // 4. Readability Analysis (20% weight)
+    const sentences = resumeText.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const avgWordsPerSentence = wordCount / sentences.length;
+    
+    readabilityScore = 80; // Base score
+    
+    if (avgWordsPerSentence > 25) {
+      readabilityScore -= 20;
+      improvements.push('Break down long sentences for better readability');
+    } else if (avgWordsPerSentence < 8) {
+      readabilityScore -= 10;
+      improvements.push('Provide more detailed descriptions of your experience');
+    }
+    
+    // Check for buzzwords and clichés
+    const buzzwords = ['synergy', 'leverage', 'paradigm', 'disruptive', 'innovative', 'cutting-edge'];
+    const buzzwordCount = buzzwords.filter(word => 
+      resumeText.toLowerCase().includes(word)
+    ).length;
+    
+    if (buzzwordCount > 2) {
+      readabilityScore -= 15;
+      improvements.push('Replace buzzwords with specific, measurable achievements');
+    }
+    
+    // Length analysis
+    if (wordCount < 200) {
+      readabilityScore -= 25;
+      improvements.push('Expand resume content - aim for 400-800 words for optimal ATS parsing');
+    } else if (wordCount > 1000) {
+      readabilityScore -= 15;
+      improvements.push('Condense content - keep resume concise and focused');
+    }
+    
+    // Calculate weighted overall score
+    const overallScore = Math.round(
+      (keywordScore * 0.30) + 
+      (formattingScore * 0.25) + 
+      (alignmentScore * 0.25) + 
+      (readabilityScore * 0.20)
+    );
+    
+    // Determine pass rate
+    let passRate: 'High' | 'Medium' | 'Low';
+    if (overallScore >= 80) passRate = 'High';
+    else if (overallScore >= 60) passRate = 'Medium';
+    else passRate = 'Low';
+    
+    // Add pass rate specific improvements
+    if (passRate === 'Low') {
+      improvements.push('Focus on adding relevant keywords and improving formatting');
+      improvements.push('Consider professional resume review or rewriting');
+    } else if (passRate === 'Medium') {
+      improvements.push('Fine-tune keyword usage and add more quantifiable achievements');
+    }
+    
+    return {
+      overall: Math.max(15, Math.min(98, overallScore)),
+      keywordDensity: Math.max(20, Math.min(95, keywordScore)),
+      formatting: Math.max(30, Math.min(95, formattingScore)),
+      jobAlignment: Math.max(25, Math.min(95, alignmentScore)),
+      readability: Math.max(35, Math.min(95, readabilityScore)),
+      improvements: improvements.slice(0, 6), // Limit to top 6 improvements
+      passRate
+    };
+  };
+
   const analyzeResume = async () => {
     if (!uploadedFile || !targetRole) {
       setUploadError('Please upload a resume and select a target role.');
@@ -291,6 +473,9 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
         
         const matchPercentage = Math.round(Math.random() * 30 + 60); // 60-90% for custom roles
         
+        // Calculate ATS Score for custom roles
+        const atsScore = calculateATSScore(resumeText, genericReqs, targetRole);
+        
         const results: AnalysisResult = {
           matchPercentage,
           strengths: ['Professional experience in the field', 'Good communication skills'],
@@ -298,7 +483,8 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
           recommendations: [`Learn more about ${targetRole} specific technologies`, 'Build relevant portfolio projects'],
           skillsFound: foundSkills,
           experienceLevel: 'Mid-level',
-          industryMatch: Math.round(matchPercentage * 0.8)
+          industryMatch: Math.round(matchPercentage * 0.8),
+          atsScore
         };
         
         setAnalysisResults(results);
@@ -344,6 +530,9 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
       ).length / jobReqs.preferredSkills.length) * 30;
       
       const matchPercentage = Math.round(requiredMatch + preferredMatch);
+      
+      // Calculate ATS Score
+      const atsScore = calculateATSScore(resumeText, jobReqs, targetRole);
       
       // Determine experience level
       const experienceYears = resumeText.match(/(\d+)\s*years?\s*of\s*experience/i);
@@ -405,7 +594,8 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
         recommendations: recommendations.length > 0 ? recommendations : ['Continue building relevant experience'],
         skillsFound: foundSkills,
         experienceLevel,
-        industryMatch: Math.round(matchPercentage * 0.8)
+        industryMatch: Math.round(matchPercentage * 0.8),
+        atsScore
       };
       
       setAnalysisResults(results);
@@ -449,13 +639,36 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
 
         {/* Match Score */}
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 shadow-lg">
                 <span className="text-4xl font-bold text-white">{analysisResults.matchPercentage}%</span>
               </div>
               <h2 className="text-xl font-bold text-gray-900 mb-2">Job Match Score</h2>
               <p className="text-gray-600">Overall compatibility with {targetRole}</p>
+            </div>
+            
+            <div className="text-center">
+              <div className={`inline-flex items-center justify-center w-32 h-32 rounded-full mb-4 shadow-lg ${
+                analysisResults.atsScore.overall >= 80 
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600' 
+                  : analysisResults.atsScore.overall >= 60 
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500' 
+                    : 'bg-gradient-to-r from-red-500 to-pink-600'
+              }`}>
+                <span className="text-4xl font-bold text-white">{analysisResults.atsScore.overall}</span>
+              </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">ATS Score</h2>
+              <p className="text-gray-600">Google ATS compatibility rating</p>
+              <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${
+                analysisResults.atsScore.passRate === 'High' 
+                  ? 'bg-green-100 text-green-800' 
+                  : analysisResults.atsScore.passRate === 'Medium' 
+                    ? 'bg-yellow-100 text-yellow-800' 
+                    : 'bg-red-100 text-red-800'
+              }`}>
+                {analysisResults.atsScore.passRate} Pass Rate
+              </div>
             </div>
             
             <div className="text-center">
@@ -473,6 +686,148 @@ const ResumeAnalyzer: React.FC<ResumeAnalyzerProps> = ({ onProgress }) => {
               <h2 className="text-xl font-bold text-gray-900 mb-2">Experience Level</h2>
               <p className="text-gray-600">Based on your background</p>
             </div>
+          </div>
+        </div>
+
+        {/* ATS Score Breakdown */}
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-8">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl">
+              <Shield className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Google ATS Score Breakdown</h2>
+              <p className="text-gray-600">Detailed analysis of your resume's ATS compatibility</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="text-center p-4 bg-blue-50 rounded-2xl">
+              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-xl mb-3 mx-auto">
+                <Search className="h-6 w-6 text-blue-600" />
+              </div>
+              <div className="text-2xl font-bold text-blue-600">{analysisResults.atsScore.keywordDensity}</div>
+              <div className="text-sm text-gray-600 mb-2">Keyword Density</div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${analysisResults.atsScore.keywordDensity}%` }}
+                />
+              </div>
+            </div>
+            
+            <div className="text-center p-4 bg-green-50 rounded-2xl">
+              <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-xl mb-3 mx-auto">
+                <FileCheck className="h-6 w-6 text-green-600" />
+              </div>
+              <div className="text-2xl font-bold text-green-600">{analysisResults.atsScore.formatting}</div>
+              <div className="text-sm text-gray-600 mb-2">Formatting</div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-green-600 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${analysisResults.atsScore.formatting}%` }}
+                />
+              </div>
+            </div>
+            
+            <div className="text-center p-4 bg-purple-50 rounded-2xl">
+              <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-xl mb-3 mx-auto">
+                <Target className="h-6 w-6 text-purple-600" />
+              </div>
+              <div className="text-2xl font-bold text-purple-600">{analysisResults.atsScore.jobAlignment}</div>
+              <div className="text-sm text-gray-600 mb-2">Job Alignment</div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-purple-600 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${analysisResults.atsScore.jobAlignment}%` }}
+                />
+              </div>
+            </div>
+            
+            <div className="text-center p-4 bg-orange-50 rounded-2xl">
+              <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-xl mb-3 mx-auto">
+                <Eye className="h-6 w-6 text-orange-600" />
+              </div>
+              <div className="text-2xl font-bold text-orange-600">{analysisResults.atsScore.readability}</div>
+              <div className="text-sm text-gray-600 mb-2">Readability</div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-orange-600 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: `${analysisResults.atsScore.readability}%` }}
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* ATS Pass Rate Indicator */}
+          <div className={`p-6 rounded-2xl border-2 ${
+            analysisResults.atsScore.passRate === 'High' 
+              ? 'bg-green-50 border-green-200' 
+              : analysisResults.atsScore.passRate === 'Medium' 
+                ? 'bg-yellow-50 border-yellow-200' 
+                : 'bg-red-50 border-red-200'
+          }`}>
+            <div className="flex items-center space-x-3 mb-3">
+              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                analysisResults.atsScore.passRate === 'High' 
+                  ? 'bg-green-100' 
+                  : analysisResults.atsScore.passRate === 'Medium' 
+                    ? 'bg-yellow-100' 
+                    : 'bg-red-100'
+              }`}>
+                <BarChart3 className={`h-4 w-4 ${
+                  analysisResults.atsScore.passRate === 'High' 
+                    ? 'text-green-600' 
+                    : analysisResults.atsScore.passRate === 'Medium' 
+                      ? 'text-yellow-600' 
+                      : 'text-red-600'
+                }`} />
+              </div>
+              <h3 className={`font-semibold ${
+                analysisResults.atsScore.passRate === 'High' 
+                  ? 'text-green-800' 
+                  : analysisResults.atsScore.passRate === 'Medium' 
+                    ? 'text-yellow-800' 
+                    : 'text-red-800'
+              }`}>
+                ATS Shortlisting Probability: {analysisResults.atsScore.passRate}
+              </h3>
+            </div>
+            <p className={`text-sm ${
+              analysisResults.atsScore.passRate === 'High' 
+                ? 'text-green-700' 
+                : analysisResults.atsScore.passRate === 'Medium' 
+                  ? 'text-yellow-700' 
+                  : 'text-red-700'
+            }`}>
+              {analysisResults.atsScore.passRate === 'High' 
+                ? 'Excellent! Your resume has a high probability of passing ATS screening and reaching human recruiters.' 
+                : analysisResults.atsScore.passRate === 'Medium' 
+                  ? 'Good potential, but some improvements could significantly increase your shortlisting chances.' 
+                  : 'Your resume may struggle with ATS systems. Focus on the improvements below to boost your chances.'}
+            </p>
+          </div>
+        </div>
+
+        {/* ATS Improvement Recommendations */}
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-8">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-2xl">
+              <AlertCircle className="h-6 w-6 text-orange-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">ATS Optimization Tips</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {analysisResults.atsScore.improvements.map((improvement, index) => (
+              <div key={index} className="p-4 bg-orange-50 rounded-2xl hover:bg-orange-100 transition-colors duration-200">
+                <div className="flex items-start space-x-3">
+                  <div className="flex items-center justify-center w-6 h-6 bg-orange-600 text-white rounded-full text-sm font-bold flex-shrink-0 mt-0.5">
+                    {index + 1}
+                  </div>
+                  <span className="text-gray-700 leading-relaxed">{improvement}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
