@@ -232,9 +232,48 @@
 
 /* Professional dark mode gradients */
 .dark .glass-effect {
-  background: rgba(17, 24, 39, 0.95);
+  background: rgba(17, 24, 39, 0.98) !important;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(75, 85, 99, 0.5);
+}
+
+/* Ensure high contrast for all text elements in dark mode */
+.dark * {
+  text-shadow: none;
+}
+
+.dark .text-white {
+  color: #ffffff !important;
+}
+
+.dark .text-gray-100 {
+  color: #f3f4f6 !important;
+}
+
+.dark .text-gray-200 {
+  color: #e5e7eb !important;
+}
+
+.dark .text-gray-300 {
+  color: #d1d5db !important;
+}
+
+.dark .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+/* Specific improvements for readability */
+.dark .bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops)) !important;
+}
+
+.dark .bg-clip-text {
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+}
+
+.dark .text-transparent {
+  color: transparent !important;
 }
 
 .card-hover {
@@ -320,39 +359,27 @@
 
 /* Status badges in dark mode */
 .dark .bg-green-100 {
-  @apply bg-green-900/60 text-green-200;
-  background-color: rgba(20, 83, 45, 0.7) !important;
-  color: #bbf7d0 !important;
+  @apply bg-green-900/40 text-green-300;
 }
 
 .dark .bg-blue-100 {
-  @apply bg-blue-900/60 text-blue-200;
-  background-color: rgba(30, 58, 138, 0.7) !important;
-  color: #bfdbfe !important;
+  @apply bg-blue-900/40 text-blue-300;
 }
 
 .dark .bg-yellow-100 {
-  @apply bg-yellow-900/60 text-yellow-200;
-  background-color: rgba(120, 53, 15, 0.7) !important;
-  color: #fef08a !important;
+  @apply bg-yellow-900/40 text-yellow-300;
 }
 
 .dark .bg-red-100 {
-  @apply bg-red-900/60 text-red-200;
-  background-color: rgba(127, 29, 29, 0.7) !important;
-  color: #fecaca !important;
+  @apply bg-red-900/40 text-red-300;
 }
 
 .dark .bg-purple-100 {
-  @apply bg-purple-900/60 text-purple-200;
-  background-color: rgba(88, 28, 135, 0.7) !important;
-  color: #e9d5ff !important;
+  @apply bg-purple-900/40 text-purple-300;
 }
 
 .dark .bg-orange-100 {
-  @apply bg-orange-900/60 text-orange-200;
-  background-color: rgba(154, 52, 18, 0.7) !important;
-  color: #fed7aa !important;
+  @apply bg-orange-900/40 text-orange-300;
 }
 
 /* Loading animation */
