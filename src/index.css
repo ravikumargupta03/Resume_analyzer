@@ -249,21 +249,29 @@
 .dark .input-field {
   @apply bg-gray-800/90 border-gray-600 text-white focus:ring-blue-500/30 focus:border-blue-400 placeholder-gray-400;
   @apply hover:border-gray-500 hover:bg-gray-700/90;
+  color: #ffffff !important;
+  background-color: rgba(31, 41, 55, 0.95) !important;
 }
 
 .dark select {
   @apply bg-gray-800/90 border-gray-600 text-white;
   @apply hover:border-gray-500 focus:border-blue-400;
+  color: #ffffff !important;
+  background-color: rgba(31, 41, 55, 0.95) !important;
 }
 
 .dark textarea {
   @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
   @apply hover:border-gray-500 focus:border-blue-400;
+  color: #ffffff !important;
+  background-color: rgba(31, 41, 55, 0.95) !important;
 }
 
 .dark input {
   @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
   @apply hover:border-gray-500 focus:border-blue-400;
+  color: #ffffff !important;
+  background-color: rgba(31, 41, 55, 0.95) !important;
 }
 
 /* Enhanced dark mode text visibility */
