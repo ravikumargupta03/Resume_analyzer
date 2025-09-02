@@ -201,11 +201,12 @@
 }
 
 .dark .card h1, .dark .card h2, .dark .card h3, .dark .card h4, .dark .card h5, .dark .card h6 {
-  @apply text-white font-semibold;
+  color: #ffffff !important;
+  font-weight: 600 !important;
 }
 
 .dark .card p, .dark .card span, .dark .card div {
-  @apply text-gray-200;
+  color: #e5e7eb !important;
 }
 
 /* Enhanced dark mode form elements */
