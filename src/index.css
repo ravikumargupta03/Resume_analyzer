@@ -196,19 +196,6 @@
   border: 1px solid rgba(75, 85, 99, 0.3);
 }
 
-.dark .card * {
-  color: #f3f4f6 !important;
-}
-
-.dark .card h1, .dark .card h2, .dark .card h3, .dark .card h4, .dark .card h5, .dark .card h6 {
-  color: #ffffff !important;
-  font-weight: 600 !important;
-}
-
-.dark .card p, .dark .card span, .dark .card div {
-  color: #e5e7eb !important;
-}
-
 /* Enhanced dark mode form elements */
 .dark input, .dark textarea, .dark select {
   @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
@@ -245,22 +232,6 @@
 
 .dark .text-white {
   color: #ffffff !important;
-}
-
-.dark .text-gray-100 {
-  color: #f3f4f6 !important;
-}
-
-.dark .text-gray-200 {
-  color: #e5e7eb !important;
-}
-
-.dark .text-gray-300 {
-  color: #d1d5db !important;
-}
-
-.dark .text-gray-400 {
-  color: #9ca3af !important;
 }
 
 /* Specific improvements for readability */
@@ -304,21 +275,6 @@
 .dark input {
   @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
   @apply hover:border-gray-500 focus:border-blue-400;
-}
-
-/* Enhanced dark mode text visibility */
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: #ffffff !important;
-  font-weight: 600 !important;
-}
-
-.dark p, .dark span, .dark div {
-  color: #e5e7eb !important;
-}
-
-.dark label {
-  color: #e5e7eb !important;
-  font-weight: 500 !important;
 }
 
 /* Dark mode specific improvements */
