@@ -197,7 +197,7 @@
 }
 
 .dark .card * {
-  @apply text-gray-100;
+  color: #f3f4f6 !important;
 }
 
 .dark .card h1, .dark .card h2, .dark .card h3, .dark .card h4, .dark .card h5, .dark .card h6 {
