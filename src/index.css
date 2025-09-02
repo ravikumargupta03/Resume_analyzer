@@ -307,79 +307,91 @@
 
 /* Enhanced dark mode text visibility */
 .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  @apply text-white font-semibold;
+  color: #ffffff !important;
+  font-weight: 600 !important;
 }
 
 .dark p, .dark span, .dark div {
-  @apply text-gray-200;
+  color: #e5e7eb !important;
 }
 
 .dark label {
-  @apply text-gray-200 font-medium;
+  color: #e5e7eb !important;
+  font-weight: 500 !important;
 }
 
 /* Dark mode specific improvements */
 .dark .text-gray-900 {
-  @apply text-white;
+  color: #ffffff !important;
 }
 
 .dark .text-gray-800 {
-  @apply text-gray-100;
+  color: #f3f4f6 !important;
 }
 
 .dark .text-gray-700 {
-  @apply text-gray-200;
+  color: #e5e7eb !important;
 }
 
 .dark .text-gray-600 {
-  @apply text-gray-300;
+  color: #d1d5db !important;
 }
 
 .dark .text-gray-500 {
-  @apply text-gray-400;
+  color: #9ca3af !important;
 }
 
 /* Enhanced card styling for dark mode */
 .dark .bg-white {
-  @apply bg-gray-800/95;
+  background-color: rgba(31, 41, 55, 0.95) !important;
 }
 
 .dark .bg-gray-50 {
-  @apply bg-gray-700/80;
+  background-color: rgba(55, 65, 81, 0.8) !important;
 }
 
 .dark .bg-gray-100 {
-  @apply bg-gray-700/60;
+  background-color: rgba(55, 65, 81, 0.6) !important;
 }
 
 /* Enhanced button styles for dark mode */
 .dark button:not(.btn-primary):not(.btn-secondary) {
-  @apply text-gray-200 hover:text-white;
+  color: #e5e7eb !important;
+}
+
+.dark button:not(.btn-primary):not(.btn-secondary):hover {
+  color: #ffffff !important;
 }
 
 /* Status badges in dark mode */
 .dark .bg-green-100 {
-  @apply bg-green-900/40 text-green-300;
+  background-color: rgba(20, 83, 45, 0.6) !important;
+  color: #86efac !important;
 }
 
 .dark .bg-blue-100 {
-  @apply bg-blue-900/40 text-blue-300;
+  background-color: rgba(30, 58, 138, 0.6) !important;
+  color: #93c5fd !important;
 }
 
 .dark .bg-yellow-100 {
-  @apply bg-yellow-900/40 text-yellow-300;
+  background-color: rgba(113, 63, 18, 0.6) !important;
+  color: #fde047 !important;
 }
 
 .dark .bg-red-100 {
-  @apply bg-red-900/40 text-red-300;
+  background-color: rgba(127, 29, 29, 0.6) !important;
+  color: #fca5a5 !important;
 }
 
 .dark .bg-purple-100 {
-  @apply bg-purple-900/40 text-purple-300;
+  background-color: rgba(88, 28, 135, 0.6) !important;
+  color: #c4b5fd !important;
 }
 
 .dark .bg-orange-100 {
-  @apply bg-orange-900/40 text-orange-300;
+  background-color: rgba(154, 52, 18, 0.6) !important;
+  color: #fdba74 !important;
 }
 
 /* Loading animation */
