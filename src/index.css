@@ -170,52 +170,94 @@
 
 /* Enhanced button styles */
 .btn-primary {
-  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300;
+  background: linear-gradient(to right, #2563eb, #7c3aed);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: scale(1.05);
 }
 
 .dark .btn-primary {
-  @apply shadow-blue-500/25 hover:shadow-blue-500/40;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.25);
+}
+
+.dark .btn-primary:hover {
+  box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.4);
 }
 
 .btn-secondary {
-  @apply bg-white text-gray-700 font-semibold py-3 px-6 rounded-2xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all duration-300;
+  background: white;
+  color: #374151;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1rem;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .dark .btn-secondary {
-  @apply bg-gray-800 text-gray-300 border-gray-600 hover:border-blue-400;
+  background: #1f2937;
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+
+.dark .btn-secondary:hover {
+  border-color: #60a5fa;
 }
 
 /* Card styles */
 .card {
-  @apply bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid #f3f4f6;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
 }
 
 .dark .card {
-  @apply bg-gray-800/90 border-gray-600/50 shadow-2xl backdrop-blur-sm;
   background: rgba(31, 41, 55, 0.95);
   border: 1px solid rgba(75, 85, 99, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
 }
 
 /* Enhanced dark mode form elements */
 .dark input, .dark textarea, .dark select {
-  @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
-  @apply focus:bg-gray-700/90 focus:border-blue-400 focus:ring-blue-400/50;
-  @apply hover:border-gray-500 transition-all duration-200;
+  background: rgba(31, 41, 55, 0.9);
+  border-color: #4b5563;
+  color: white;
 }
 
-.dark button {
-  @apply text-white;
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #9ca3af;
 }
 
-.dark .btn-primary {
-  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white;
-  @apply hover:from-blue-700 hover:to-purple-700;
-  @apply shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40;
+.dark input:focus, .dark textarea:focus, .dark select:focus {
+  background: rgba(55, 65, 81, 0.9);
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
 }
 
-.dark .btn-secondary {
-  @apply bg-gray-800 text-gray-200 border-gray-600;
-  @apply hover:bg-gray-700 hover:border-blue-400 hover:text-white;
+.dark input:hover, .dark textarea:hover, .dark select:hover {
+  border-color: #6b7280;
+  background: rgba(55, 65, 81, 0.9);
 }
 
 /* Professional dark mode gradients */
@@ -225,80 +267,51 @@
   border: 1px solid rgba(75, 85, 99, 0.5);
 }
 
-/* Ensure high contrast for all text elements in dark mode */
-.dark * {
-  text-shadow: none;
-}
-
-.dark .text-white {
-  color: #ffffff !important;
-}
-
-/* Specific improvements for readability */
-.dark .bg-gradient-to-r {
-  background-image: linear-gradient(to right, var(--tw-gradient-stops)) !important;
-}
-
-.dark .bg-clip-text {
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
-}
-
-.dark .text-transparent {
-  color: transparent !important;
-}
-
 .card-hover {
-  @apply hover:-translate-y-2 hover:scale-105;
+  transition: transform 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-0.5rem) scale(1.05);
 }
 
 /* Input styles */
 .input-field {
-  @apply w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 bg-white;
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 1rem;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 .dark .input-field {
-  @apply bg-gray-800/90 border-gray-600 text-white focus:ring-blue-500/30 focus:border-blue-400 placeholder-gray-400;
-  @apply hover:border-gray-500 hover:bg-gray-700/90;
+  background: rgba(31, 41, 55, 0.9);
+  border-color: #4b5563;
+  color: white;
 }
 
-.dark select {
-  @apply bg-gray-800/90 border-gray-600 text-white;
-  @apply hover:border-gray-500 focus:border-blue-400;
+.dark .input-field::placeholder {
+  color: #9ca3af;
 }
 
-.dark textarea {
-  @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
-  @apply hover:border-gray-500 focus:border-blue-400;
+.dark .input-field:hover {
+  border-color: #6b7280;
+  background: rgba(55, 65, 81, 0.9);
 }
 
-.dark input {
-  @apply bg-gray-800/90 border-gray-600 text-white placeholder-gray-400;
-  @apply hover:border-gray-500 focus:border-blue-400;
+.dark .input-field:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
 }
 
-/* Dark mode specific improvements */
-.dark .text-gray-900 {
-  color: #ffffff !important;
-}
-
-.dark .text-gray-800 {
-  color: #f3f4f6 !important;
-}
-
-.dark .text-gray-700 {
-  color: #e5e7eb !important;
-}
-
-.dark .text-gray-600 {
-  color: #d1d5db !important;
-}
-
-.dark .text-gray-500 {
-  color: #9ca3af !important;
-}
-
-/* Enhanced card styling for dark mode */
+/* Dark mode specific color overrides */
 .dark .bg-white {
   background-color: rgba(31, 41, 55, 0.95) !important;
 }
@@ -309,15 +322,6 @@
 
 .dark .bg-gray-100 {
   background-color: rgba(55, 65, 81, 0.6) !important;
-}
-
-/* Enhanced button styles for dark mode */
-.dark button:not(.btn-primary):not(.btn-secondary) {
-  color: #e5e7eb !important;
-}
-
-.dark button:not(.btn-primary):not(.btn-secondary):hover {
-  color: #ffffff !important;
 }
 
 /* Status badges in dark mode */
