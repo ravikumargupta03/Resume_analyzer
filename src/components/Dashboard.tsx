@@ -46,22 +46,22 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
   ];
 
   return (
-    <div className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`min-h-screen mobile-container py-4 sm:py-6 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Career Development Dashboard</h1>
-          <p className={`text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+        <div className="mb-6 sm:mb-8 text-center sm:text-left">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Career Development Dashboard</h1>
+          <p className={`text-base sm:text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Track your progress and continue your learning journey
           </p>
         </div>
 
         {/* Progress Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <div className="flex items-center justify-between mb-4">
-              <Trophy className="w-8 h-8 text-yellow-500" />
-              <span className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <div className={`card p-4 sm:p-6`}>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500" />
+              <span className={`text-xl sm:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {userProgress.completedModules}
               </span>
             </div>
@@ -73,10 +73,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
             </p>
           </div>
 
-          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <div className="flex items-center justify-between mb-4">
-              <TrendingUp className="w-8 h-8 text-green-500" />
-              <span className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className={`card p-4 sm:p-6`}>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-green-500" />
+              <span className={`text-xl sm:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {Math.round(progressPercentage)}%
               </span>
             </div>
@@ -91,10 +91,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
             </div>
           </div>
 
-          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <div className="flex items-center justify-between mb-4">
-              <Clock className="w-8 h-8 text-blue-500" />
-              <span className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className={`card p-4 sm:p-6`}>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
+              <span className={`text-xl sm:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {userProgress.currentStreak}
               </span>
             </div>
@@ -106,10 +106,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
             </p>
           </div>
 
-          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <div className="flex items-center justify-between mb-4">
-              <Target className="w-8 h-8 text-purple-500" />
-              <span className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className={`card p-4 sm:p-6`}>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <Target className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500" />
+              <span className={`text-base sm:text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {userProgress.skillLevel}
               </span>
             </div>
@@ -123,11 +123,11 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
         </div>
 
         {/* Learning Modules */}
-        <div className="mb-8">
-          <h2 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className="mb-6 sm:mb-8">
+          <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
             Learning Modules
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {modules.map((module) => {
               const IconComponent = module.icon;
               return (
@@ -138,8 +138,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
                   }`}
                   onClick={() => onModuleSelect(module.id)}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <IconComponent className={`w-8 h-8 ${module.completed ? 'text-green-500' : 'text-blue-500'}`} />
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <IconComponent className={`w-6 h-6 sm:w-8 sm:h-8 ${module.completed ? 'text-green-500' : 'text-blue-500'}`} />
                     {module.completed && <CheckCircle className="w-6 h-6 text-green-500" />}
                   </div>
                   <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -148,7 +148,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
                   <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {module.description}
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
                     <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                       {module.duration}
                     </span>
@@ -167,8 +167,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userProgress, onModuleSelect, dar
         </div>
 
         {/* Recent Achievements */}
-        <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h2 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className={`card p-4 sm:p-6`}>
+          <h2 className={`text-lg sm:text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
             Recent Achievements
           </h2>
           <div className="space-y-3">
