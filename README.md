@@ -1,5 +1,4 @@
 ai-career-accelerator/
-│
 ├── frontend/          # React + TypeScript UI
 ├── backend/           # Python backend APIs
 ├── models/            # ML/NLP models for resume analysis
