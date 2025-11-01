@@ -1,18 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Plus, 
-  Building, 
-  Calendar, 
-  DollarSign, 
-  MapPin,
-  ExternalLink,
-  Edit3,
-  Trash2,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle
-} from 'lucide-react';
+import { Plus, Building, Calendar, DollarSign, MapPin, ExternalLink, CreditCard as Edit3, Trash2, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 interface JobTrackerProps {
   onProgress: (progress: any) => void;
