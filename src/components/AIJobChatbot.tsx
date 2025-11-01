@@ -45,6 +45,7 @@ const AIJobChatbot: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [conversationContext, setConversationContext] = useState<string[]>([]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -61,48 +62,66 @@ const AIJobChatbot: React.FC = () => {
     const jobDatabase = [
       {
         title: 'Senior Frontend Developer',
-        company: 'Google',
-        location: 'Mountain View, CA',
-        salary: '$150,000 - $200,000',
-        url: 'https://careers.google.com',
+        company: 'Flipkart',
+        location: 'Bangalore, India',
+        salary: '₹15,00,000 - ₹25,00,000',
+        url: 'https://www.flipkartcareers.com',
         match: 95,
         skills: ['React', 'TypeScript', 'JavaScript']
       },
       {
         title: 'Full Stack Engineer',
-        company: 'Meta',
-        location: 'Menlo Park, CA',
-        salary: '$140,000 - $180,000',
-        url: 'https://careers.meta.com',
+        company: 'Swiggy',
+        location: 'Bangalore, India',
+        salary: '₹12,00,000 - ₹18,00,000',
+        url: 'https://careers.swiggy.com',
         match: 88,
         skills: ['React', 'Node.js', 'GraphQL']
       },
       {
         title: 'Backend Developer',
-        company: 'Netflix',
-        location: 'Los Gatos, CA',
-        salary: '$130,000 - $170,000',
-        url: 'https://jobs.netflix.com',
+        company: 'Razorpay',
+        location: 'Bangalore, India',
+        salary: '₹14,00,000 - ₹20,00,000',
+        url: 'https://razorpay.com/jobs',
         match: 82,
         skills: ['Python', 'AWS', 'Microservices']
       },
       {
         title: 'DevOps Engineer',
-        company: 'Amazon',
-        location: 'Seattle, WA',
-        salary: '$120,000 - $160,000',
+        company: 'Paytm',
+        location: 'Noida, India',
+        salary: '₹10,00,000 - ₹16,00,000',
         url: 'https://amazon.jobs',
         match: 78,
         skills: ['AWS', 'Docker', 'Kubernetes']
       },
       {
         title: 'Data Scientist',
-        company: 'Uber',
-        location: 'San Francisco, CA',
-        salary: '$135,000 - $175,000',
-        url: 'https://uber.com/careers',
+        company: 'Ola',
+        location: 'Bangalore, India',
+        salary: '₹16,00,000 - ₹22,00,000',
+        url: 'https://www.olacabs.com/careers',
         match: 85,
         skills: ['Python', 'Machine Learning', 'SQL']
+      },
+      {
+        title: 'React Developer',
+        company: 'Zomato',
+        location: 'Gurgaon, India',
+        salary: '₹8,00,000 - ₹14,00,000',
+        url: 'https://www.zomato.com/careers',
+        match: 90,
+        skills: ['React', 'Redux', 'JavaScript']
+      },
+      {
+        title: 'Software Engineer',
+        company: 'BYJU\'S',
+        location: 'Bangalore, India',
+        salary: '₹12,00,000 - ₹18,00,000',
+        url: 'https://byjus.com/careers',
+        match: 87,
+        skills: ['React', 'Node.js', 'MongoDB']
       }
     ];
 
@@ -112,6 +131,7 @@ const AIJobChatbot: React.FC = () => {
     if (keywords.includes('frontend') || keywords.includes('react')) {
       filteredJobs = jobDatabase.filter(job => 
         job.title.toLowerCase().includes('frontend') || 
+        job.title.toLowerCase().includes('react') ||
         job.skills.some(skill => skill.toLowerCase().includes('react'))
       );
     } else if (keywords.includes('backend') || keywords.includes('python')) {
@@ -129,6 +149,10 @@ const AIJobChatbot: React.FC = () => {
         job.title.toLowerCase().includes('data') || 
         job.skills.some(skill => skill.toLowerCase().includes('machine'))
       );
+    } else if (keywords.includes('full stack') || keywords.includes('fullstack')) {
+      filteredJobs = jobDatabase.filter(job => 
+        job.title.toLowerCase().includes('full stack') || job.title.toLowerCase().includes('engineer')
+      );
     }
 
     return filteredJobs.slice(0, 3); // Return top 3 matches
@@ -136,40 +160,96 @@ const AIJobChatbot: React.FC = () => {
 
   const generateBotResponse = (userMessage: string): string => {
     const keywords = userMessage.toLowerCase();
+    const context = conversationContext.join(' ').toLowerCase();
     
+    // Context-aware responses
+    if (context.includes('salary') && (keywords.includes('negotiate') || keywords.includes('negotiation'))) {
+      return "For salary negotiation in India: 1) Research market rates on platforms like Glassdoor and AmbitionBox, 2) Highlight your unique skills and achievements, 3) Consider the complete package (salary + benefits + ESOPs), 4) Be prepared to justify your ask with concrete examples, 5) Timing is key - negotiate after receiving the offer. Indian companies often have 10-20% negotiation room.";
+    }
+    
+    if (context.includes('interview') && (keywords.includes('prepare') || keywords.includes('preparation'))) {
+      return "For Indian tech interviews: 1) Practice coding on HackerRank/LeetCode, 2) Prepare for system design (especially for senior roles), 3) Know your resume inside-out, 4) Research the company's products and recent news, 5) Prepare questions about growth, learning opportunities, and team structure. Many Indian companies focus heavily on problem-solving and cultural fit.";
+    }
+    
+    // Location-specific responses
+    if (keywords.includes('bangalore') || keywords.includes('bengaluru')) {
+      return "Bangalore is India's Silicon Valley! It has the highest concentration of tech jobs with companies like Flipkart, Swiggy, Razorpay, and global offices of Google, Microsoft, Amazon. Average salaries are 15-20% higher than other Indian cities. Here are some opportunities:";
+    }
+    
+    if (keywords.includes('mumbai')) {
+      return "Mumbai has a growing tech scene with fintech companies like Paytm, PhonePe, and many startups. It's also home to traditional IT companies and has good opportunities in e-commerce. Here are relevant positions:";
+    }
+    
+    if (keywords.includes('delhi') || keywords.includes('ncr') || keywords.includes('gurgaon') || keywords.includes('noida')) {
+      return "Delhi NCR has major tech hubs in Gurgaon and Noida with companies like Paytm, Zomato, OYO, and many MNCs. The region offers diverse opportunities across different tech domains:";
+    }
+    
+    // Greeting responses
     if (keywords.includes('hello') || keywords.includes('hi')) {
-      return "Hello! I'm here to help you find your next great job opportunity. What type of role interests you?";
+      const greetings = [
+        "Hello! I'm your AI career assistant. I can help you find jobs in India's booming tech market. What role are you looking for?",
+        "Hi there! Ready to explore exciting career opportunities? Tell me about your dream job or skills!",
+        "Namaste! I'm here to help you navigate India's tech job market. What position interests you?"
+      ];
+      return greetings[Math.floor(Math.random() * greetings.length)];
     }
     
+    // Salary-related responses
     if (keywords.includes('salary') || keywords.includes('pay')) {
-      return "I can help you find roles with competitive salaries! What's your target salary range and preferred location?";
+      return "Indian tech salaries have grown significantly! Bangalore and Mumbai offer the highest packages. For freshers: ₹3-8L, Mid-level: ₹8-20L, Senior: ₹20L+. What's your experience level and preferred location?";
     }
     
+    // Remote work responses
     if (keywords.includes('remote')) {
-      return "Great! Remote work is very popular. I'll focus on remote-friendly positions. What's your technical background?";
+      return "Remote work is booming in India! Many companies now offer hybrid/remote options, especially post-COVID. Startups and product companies are most flexible. What's your technical expertise?";
     }
     
+    // Role-specific responses with more variety
     if (keywords.includes('frontend') || keywords.includes('react')) {
-      return "Excellent! Frontend development is in high demand. I found some great React and frontend positions for you:";
+      const responses = [
+        "Frontend development is hot in India! React developers are especially in demand. Companies like Flipkart, Swiggy are actively hiring:",
+        "Great choice! Frontend roles in India focus heavily on React, Next.js, and TypeScript. Here are some exciting opportunities:",
+        "Frontend development offers excellent growth in India's product companies. Check out these React positions:"
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
     }
     
     if (keywords.includes('backend') || keywords.includes('python')) {
-      return "Perfect! Backend development offers great opportunities. Here are some Python and backend roles that match your interests:";
+      const responses = [
+        "Backend development is crucial for India's growing fintech and e-commerce sectors. Here are some Python/Java opportunities:",
+        "Excellent! Backend engineers are highly valued, especially with microservices experience. Check these roles:",
+        "Backend development offers great career growth in India. Many companies need scalable solutions:"
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
     }
     
     if (keywords.includes('devops') || keywords.includes('aws')) {
-      return "DevOps is a fantastic field! I found some excellent cloud and DevOps positions:";
+      return "DevOps is exploding in India! With digital transformation, companies need cloud experts. AWS/Azure skills are highly valued. Here are some opportunities:";
     }
     
     if (keywords.includes('data') || keywords.includes('machine learning')) {
-      return "Data science is booming! Here are some exciting data and ML opportunities:";
+      return "Data Science and ML are huge in India! Companies like Flipkart, Ola, Swiggy need data experts for personalization and analytics. Here are some roles:";
+    }
+    
+    if (keywords.includes('startup') || keywords.includes('startups')) {
+      return "Indian startup ecosystem is thriving! Startups offer equity, faster growth, and diverse experience. Bangalore, Mumbai, Delhi have the most opportunities. Here are some startup roles:";
+    }
+    
+    if (keywords.includes('experience') || keywords.includes('fresher') || keywords.includes('entry level')) {
+      return "For freshers in India: Focus on product-based companies, build strong GitHub profile, contribute to open source, and practice coding. Many companies have dedicated fresher programs:";
     }
     
     if (keywords.includes('help') || keywords.includes('how')) {
-      return "I can help you find jobs by analyzing your skills and preferences. Just tell me what kind of role you're looking for, your preferred location, or any specific technologies you work with!";
+      return "I can help you with: 🔍 Job search in Indian companies, 💰 Salary insights, 📍 Location-specific advice, 🎯 Role recommendations, 📝 Interview tips, and 🚀 Career guidance. What would you like to know?";
     }
     
-    return "Based on your interests, I found some relevant opportunities for you:";
+    // Default responses with more variety
+    const defaultResponses = [
+      "Based on your interests, I found some relevant opportunities in India's tech market:",
+      "Here are some exciting positions that match your profile:",
+      "I've curated these opportunities from India's top tech companies:"
+    ];
+    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   };
 
   const handleSendMessage = async () => {
@@ -183,6 +263,9 @@ const AIJobChatbot: React.FC = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    
+    // Update conversation context
+    setConversationContext(prev => [...prev.slice(-4), inputText]); // Keep last 5 messages for context
     setInputText('');
     setIsTyping(true);
 
@@ -360,7 +443,7 @@ const AIJobChatbot: React.FC = () => {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask about jobs, skills, or career advice..."
+                  placeholder="Ask about jobs in India, salaries, interview tips..."
                   className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 />
                 <button

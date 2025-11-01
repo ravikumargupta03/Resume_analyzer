@@ -12,167 +12,192 @@ import {
 
 const MarketInsights: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState('Frontend Developer');
-  const [selectedLocation, setSelectedLocation] = useState('San Francisco, CA');
+  const [selectedLocation, setSelectedLocation] = useState('Bangalore, India');
   const [customRole, setCustomRole] = useState('');
 
   // Dynamic market data based on location and role
   const getLocationMultiplier = (location: string) => {
     const multipliers: { [key: string]: number } = {
-      'San Francisco, CA': 1.3,
-      'New York, NY': 1.25,
-      'Seattle, WA': 1.2,
-      'Austin, TX': 1.0,
-      'Denver, CO': 0.95,
-      'Chicago, IL': 1.1,
-      'Boston, MA': 1.15,
-      'Los Angeles, CA': 1.1,
-      'Remote': 1.05
+      'Bangalore, India': 1.0,
+      'Mumbai, India': 1.15,
+      'Delhi NCR, India': 1.1,
+      'Hyderabad, India': 0.95,
+      'Chennai, India': 0.9,
+      'Pune, India': 0.85,
+      'Kolkata, India': 0.8,
+      'Ahmedabad, India': 0.75,
+      'Remote (India)': 0.9,
+      'San Francisco, CA': 2.8,
+      'New York, NY': 2.5,
+      'London, UK': 2.2,
+      'Singapore': 1.8,
+      'Dubai, UAE': 1.6
     };
     return multipliers[location] || 1.0;
   };
 
   const getDemandByLocation = (location: string) => {
     const demands: { [key: string]: string } = {
+      'Bangalore, India': 'Very High',
+      'Mumbai, India': 'Very High',
+      'Delhi NCR, India': 'High',
+      'Hyderabad, India': 'High',
+      'Chennai, India': 'High',
+      'Pune, India': 'Medium',
+      'Kolkata, India': 'Medium',
+      'Ahmedabad, India': 'Medium',
+      'Remote (India)': 'Very High',
       'San Francisco, CA': 'Very High',
       'New York, NY': 'Very High',
-      'Seattle, WA': 'High',
-      'Austin, TX': 'High',
-      'Denver, CO': 'Medium',
-      'Chicago, IL': 'High',
-      'Boston, MA': 'High',
-      'Los Angeles, CA': 'High',
-      'Remote': 'Very High'
+      'London, UK': 'High',
+      'Singapore': 'High',
+      'Dubai, UAE': 'Medium'
     };
     return demands[location] || 'Medium';
   };
 
   const getOpeningsByLocation = (baseOpenings: number, location: string) => {
     const locationFactors: { [key: string]: number } = {
-      'San Francisco, CA': 1.5,
-      'New York, NY': 1.4,
-      'Seattle, WA': 1.2,
-      'Austin, TX': 1.0,
-      'Denver, CO': 0.7,
-      'Chicago, IL': 1.1,
-      'Boston, MA': 1.0,
-      'Los Angeles, CA': 1.2,
-      'Remote': 2.0
+      'Bangalore, India': 2.5,
+      'Mumbai, India': 2.0,
+      'Delhi NCR, India': 1.8,
+      'Hyderabad, India': 1.5,
+      'Chennai, India': 1.3,
+      'Pune, India': 1.2,
+      'Kolkata, India': 0.8,
+      'Ahmedabad, India': 0.7,
+      'Remote (India)': 3.0,
+      'San Francisco, CA': 1.2,
+      'New York, NY': 1.1,
+      'London, UK': 0.9,
+      'Singapore': 0.8,
+      'Dubai, UAE': 0.6
     };
     return Math.round(baseOpenings * (locationFactors[location] || 1.0));
   };
 
   const marketData = {
     'Frontend Developer': {
-      averageSalary: Math.round(125000 * getLocationMultiplier(selectedLocation)),
-      salaryRange: { min: 95000, max: 165000 },
+      averageSalary: Math.round(800000 * getLocationMultiplier(selectedLocation)), // Base salary in INR
+      salaryRange: { min: 600000, max: 1200000 },
       demand: getDemandByLocation(selectedLocation),
       growth: '+15%',
       openings: getOpeningsByLocation(2847, selectedLocation),
       topSkills: ['React', 'TypeScript', 'JavaScript', 'CSS', 'Node.js'],
-      topCompanies: ['Google', 'Meta', 'Netflix', 'Stripe', 'Airbnb'],
+      topCompanies: selectedLocation.includes('India') 
+        ? ['TCS', 'Infosys', 'Wipro', 'Flipkart', 'Swiggy'] 
+        : ['Google', 'Meta', 'Netflix', 'Stripe', 'Airbnb'],
       experience: {
         'Junior (0-2 years)': { 
-          salary: Math.round(85000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(500000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(850, selectedLocation) 
         },
         'Mid-level (3-5 years)': { 
-          salary: Math.round(125000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(800000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(1200, selectedLocation) 
         },
         'Senior (5+ years)': { 
-          salary: Math.round(165000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(1200000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(797, selectedLocation) 
         }
       }
     },
     'Backend Developer': {
-      averageSalary: Math.round(135000 * getLocationMultiplier(selectedLocation)),
-      salaryRange: { min: 105000, max: 180000 },
+      averageSalary: Math.round(900000 * getLocationMultiplier(selectedLocation)),
+      salaryRange: { min: 700000, max: 1400000 },
       demand: getDemandByLocation(selectedLocation),
       growth: '+22%',
       openings: getOpeningsByLocation(3254, selectedLocation),
       topSkills: ['Python', 'Java', 'AWS', 'Docker', 'PostgreSQL'],
-      topCompanies: ['Amazon', 'Microsoft', 'Uber', 'Spotify', 'Palantir'],
+      topCompanies: selectedLocation.includes('India') 
+        ? ['Amazon', 'Microsoft', 'Paytm', 'Zomato', 'BYJU\'S'] 
+        : ['Amazon', 'Microsoft', 'Uber', 'Spotify', 'Palantir'],
       experience: {
         'Junior (0-2 years)': { 
-          salary: Math.round(95000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(600000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(980, selectedLocation) 
         },
         'Mid-level (3-5 years)': { 
-          salary: Math.round(135000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(900000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(1450, selectedLocation) 
         },
         'Senior (5+ years)': { 
-          salary: Math.round(180000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(1400000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(824, selectedLocation) 
         }
       }
     },
     'Full Stack Developer': {
-      averageSalary: Math.round(130000 * getLocationMultiplier(selectedLocation)),
-      salaryRange: { min: 100000, max: 170000 },
+      averageSalary: Math.round(850000 * getLocationMultiplier(selectedLocation)),
+      salaryRange: { min: 650000, max: 1300000 },
       demand: getDemandByLocation(selectedLocation),
       growth: '+18%',
       openings: getOpeningsByLocation(2156, selectedLocation),
       topSkills: ['React', 'Node.js', 'Python', 'MongoDB', 'AWS'],
-      topCompanies: ['Shopify', 'Square', 'Twilio', 'Figma', 'Notion'],
+      topCompanies: selectedLocation.includes('India') 
+        ? ['Razorpay', 'Freshworks', 'Ola', 'PhonePe', 'Myntra'] 
+        : ['Shopify', 'Square', 'Twilio', 'Figma', 'Notion'],
       experience: {
         'Junior (0-2 years)': { 
-          salary: Math.round(90000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(550000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(650, selectedLocation) 
         },
         'Mid-level (3-5 years)': { 
-          salary: Math.round(130000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(850000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(980, selectedLocation) 
         },
         'Senior (5+ years)': { 
-          salary: Math.round(170000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(1300000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(526, selectedLocation) 
         }
       }
     },
     'DevOps Engineer': {
-      averageSalary: Math.round(140000 * getLocationMultiplier(selectedLocation)),
-      salaryRange: { min: 110000, max: 190000 },
+      averageSalary: Math.round(1000000 * getLocationMultiplier(selectedLocation)),
+      salaryRange: { min: 800000, max: 1500000 },
       demand: getDemandByLocation(selectedLocation),
       growth: '+25%',
       openings: getOpeningsByLocation(1890, selectedLocation),
       topSkills: ['AWS', 'Docker', 'Kubernetes', 'Jenkins', 'Terraform'],
-      topCompanies: ['Amazon', 'Microsoft', 'Google', 'Netflix', 'Uber'],
+      topCompanies: selectedLocation.includes('India') 
+        ? ['Amazon', 'Microsoft', 'Google', 'Jio', 'Airtel'] 
+        : ['Amazon', 'Microsoft', 'Google', 'Netflix', 'Uber'],
       experience: {
         'Junior (0-2 years)': { 
-          salary: Math.round(100000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(700000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(450, selectedLocation) 
         },
         'Mid-level (3-5 years)': { 
-          salary: Math.round(140000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(1000000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(890, selectedLocation) 
         },
         'Senior (5+ years)': { 
-          salary: Math.round(190000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(1500000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(550, selectedLocation) 
         }
       }
     },
     'Data Scientist': {
-      averageSalary: Math.round(145000 * getLocationMultiplier(selectedLocation)),
-      salaryRange: { min: 115000, max: 200000 },
+      averageSalary: Math.round(1100000 * getLocationMultiplier(selectedLocation)),
+      salaryRange: { min: 900000, max: 1600000 },
       demand: getDemandByLocation(selectedLocation),
       growth: '+20%',
       openings: getOpeningsByLocation(1650, selectedLocation),
       topSkills: ['Python', 'R', 'SQL', 'Machine Learning', 'TensorFlow'],
-      topCompanies: ['Google', 'Meta', 'Netflix', 'Uber', 'Airbnb'],
+      topCompanies: selectedLocation.includes('India') 
+        ? ['Google', 'Microsoft', 'Flipkart', 'Ola', 'Nykaa'] 
+        : ['Google', 'Meta', 'Netflix', 'Uber', 'Airbnb'],
       experience: {
         'Junior (0-2 years)': { 
-          salary: Math.round(105000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(800000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(380, selectedLocation) 
         },
         'Mid-level (3-5 years)': { 
-          salary: Math.round(145000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(1100000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(780, selectedLocation) 
         },
         'Senior (5+ years)': { 
-          salary: Math.round(200000 * getLocationMultiplier(selectedLocation)), 
+          salary: Math.round(1600000 * getLocationMultiplier(selectedLocation)), 
           openings: getOpeningsByLocation(490, selectedLocation) 
         }
       }
@@ -190,9 +215,10 @@ const MarketInsights: React.FC = () => {
   ];
 
   const formatSalary = (salary: number) => {
-    return new Intl.NumberFormat('en-US', {
+    const isIndianLocation = selectedLocation.includes('India');
+    return new Intl.NumberFormat(isIndianLocation ? 'en-IN' : 'en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: isIndianLocation ? 'INR' : 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(salary);
@@ -250,15 +276,24 @@ const MarketInsights: React.FC = () => {
               onChange={(e) => setSelectedLocation(e.target.value)}
               className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="San Francisco, CA">San Francisco, CA</option>
-              <option value="New York, NY">New York, NY</option>
-              <option value="Seattle, WA">Seattle, WA</option>
-              <option value="Austin, TX">Austin, TX</option>
-              <option value="Denver, CO">Denver, CO</option>
-              <option value="Chicago, IL">Chicago, IL</option>
-              <option value="Boston, MA">Boston, MA</option>
-              <option value="Los Angeles, CA">Los Angeles, CA</option>
-              <option value="Remote">Remote</option>
+              <optgroup label="🇮🇳 India">
+                <option value="Bangalore, India">Bangalore, India</option>
+                <option value="Mumbai, India">Mumbai, India</option>
+                <option value="Delhi NCR, India">Delhi NCR, India</option>
+                <option value="Hyderabad, India">Hyderabad, India</option>
+                <option value="Chennai, India">Chennai, India</option>
+                <option value="Pune, India">Pune, India</option>
+                <option value="Kolkata, India">Kolkata, India</option>
+                <option value="Ahmedabad, India">Ahmedabad, India</option>
+                <option value="Remote (India)">Remote (India)</option>
+              </optgroup>
+              <optgroup label="🌍 International">
+                <option value="San Francisco, CA">San Francisco, CA</option>
+                <option value="New York, NY">New York, NY</option>
+                <option value="London, UK">London, UK</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Dubai, UAE">Dubai, UAE</option>
+              </optgroup>
             </select>
           </div>
           <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">

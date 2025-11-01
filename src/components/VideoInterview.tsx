@@ -235,8 +235,8 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
 
   if (sessionComplete && aiScores) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="card">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-6 shadow-lg animate-bounce">
               <Award className="h-10 w-10 text-white" />
@@ -260,7 +260,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
           {/* Score Breakdown */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{aiScores.technical}</div>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-300">{aiScores.technical}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Technical Knowledge</div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
                 <div 
@@ -270,7 +270,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               </div>
             </div>
             <div className="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl">
-              <div className="text-3xl font-bold text-green-600 dark:text-green-400">{aiScores.communication}</div>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-300">{aiScores.communication}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Communication</div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
                 <div 
@@ -280,7 +280,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               </div>
             </div>
             <div className="text-center p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
-              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{aiScores.confidence}</div>
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-300">{aiScores.confidence}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Confidence & Delivery</div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
                 <div 
@@ -297,7 +297,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               Detailed Question Analysis
             </h2>
             {questions.map((question, index) => (
-              <div key={index} className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6">
+              <div key={index} className="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
@@ -354,7 +354,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
           </div>
 
           {/* AI Recommendations */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 mb-8">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 mb-8 border border-purple-200 dark:border-purple-700">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
               <Brain className="inline h-6 w-6 mr-2" />
               AI-Powered Recommendations
@@ -362,7 +362,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-semibold text-green-800 dark:text-green-400 mb-2">✅ Strengths</h3>
-                <ul className="space-y-1 text-green-700 dark:text-green-300">
+                <ul className="space-y-1 text-green-700 dark:text-green-200">
                   {aiScores.technical > 80 && <li>• Strong technical knowledge demonstrated</li>}
                   {aiScores.communication > 75 && <li>• Clear and articulate communication</li>}
                   {aiScores.confidence > 70 && <li>• Confident delivery and presentation</li>}
@@ -371,7 +371,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               </div>
               <div>
                 <h3 className="font-semibold text-orange-800 dark:text-orange-400 mb-2">🎯 Areas for Improvement</h3>
-                <ul className="space-y-1 text-orange-700 dark:text-orange-300">
+                <ul className="space-y-1 text-orange-700 dark:text-orange-200">
                   {aiScores.technical < 70 && <li>• Strengthen technical knowledge in core areas</li>}
                   {aiScores.communication < 70 && <li>• Practice explaining concepts more clearly</li>}
                   <li>• Include more specific examples and metrics</li>
@@ -396,7 +396,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               <RotateCcw className="h-5 w-5" />
               <span>Practice Again</span>
             </button>
-            <button className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <button className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
               Download Report
             </button>
           </div>
@@ -407,8 +407,8 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
 
   if (!sessionActive) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="card">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl mb-6 shadow-lg animate-float">
               <Video className="h-10 w-10 text-white" />
@@ -449,7 +449,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               <select
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
-                className="input-field"
+                className="w-full p-3 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option>Frontend Developer</option>
                 <option>Backend Developer</option>
@@ -463,7 +463,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               <select
                 value={selectedLevel}
                 onChange={(e) => setSelectedLevel(e.target.value)}
-                className="input-field"
+                className="w-full p-3 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option>Junior (0-2 years)</option>
                 <option>Mid-level (3-5 years)</option>
@@ -474,7 +474,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
 
           {/* Camera Preview */}
           <div className="mb-8">
-            <div className="bg-gray-900 rounded-2xl p-6 text-center">
+            <div className="bg-gray-900 dark:bg-gray-800 rounded-2xl p-6 text-center border border-gray-700">
               <video
                 ref={videoRef}
                 autoPlay
@@ -485,16 +485,16 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               <div className="flex items-center justify-center space-x-4 mt-4">
                 <button
                   onClick={() => setVideoEnabled(!videoEnabled)}
-                  className={`p-3 rounded-full transition-colors ${
-                    videoEnabled ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-300'
+                  className={`p-3 rounded-full transition-colors shadow-lg ${
+                    videoEnabled ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-600 hover:bg-gray-500 text-gray-300'
                   }`}
                 >
                   {videoEnabled ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
                 </button>
                 <button
                   onClick={() => setAudioEnabled(!audioEnabled)}
-                  className={`p-3 rounded-full transition-colors ${
-                    audioEnabled ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-300'
+                  className={`p-3 rounded-full transition-colors shadow-lg ${
+                    audioEnabled ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-600 hover:bg-gray-500 text-gray-300'
                   }`}
                 >
                   {audioEnabled ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
@@ -522,8 +522,8 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="card">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8">
         {/* Progress Bar */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
@@ -550,7 +550,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Video Section */}
           <div>
-            <div className="bg-gray-900 rounded-2xl p-4 mb-4">
+            <div className="bg-gray-900 dark:bg-gray-800 rounded-2xl p-4 mb-4 border border-gray-700">
               <video
                 ref={videoRef}
                 autoPlay
@@ -561,24 +561,24 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
               <div className="flex items-center justify-center space-x-4 mt-4">
                 <button
                   onClick={() => setVideoEnabled(!videoEnabled)}
-                  className={`p-3 rounded-full transition-colors ${
-                    videoEnabled ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-300'
+                  className={`p-3 rounded-full transition-colors shadow-lg ${
+                    videoEnabled ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-600 hover:bg-gray-500 text-gray-300'
                   }`}
                 >
                   {videoEnabled ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
                 </button>
                 <button
                   onClick={isRecording ? stopRecording : startRecording}
-                  className={`p-4 rounded-full transition-colors ${
-                    isRecording ? 'bg-red-600 text-white animate-pulse' : 'bg-green-600 text-white'
+                  className={`p-4 rounded-full transition-colors shadow-lg ${
+                    isRecording ? 'bg-red-600 hover:bg-red-700 text-white animate-pulse' : 'bg-green-600 hover:bg-green-700 text-white'
                   }`}
                 >
                   {isRecording ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                 </button>
                 <button
                   onClick={() => setAudioEnabled(!audioEnabled)}
-                  className={`p-3 rounded-full transition-colors ${
-                    audioEnabled ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-300'
+                  className={`p-3 rounded-full transition-colors shadow-lg ${
+                    audioEnabled ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-600 hover:bg-gray-500 text-gray-300'
                   }`}
                 >
                   {audioEnabled ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
@@ -615,7 +615,7 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
                 value={currentResponse}
                 onChange={(e) => setCurrentResponse(e.target.value)}
                 placeholder="You can type notes here while speaking..."
-                className="w-full h-32 p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 resize-none"
+                className="w-full h-32 p-4 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none"
               />
             </div>
 
@@ -625,13 +625,13 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
                   setSessionActive(false);
                   stopCamera();
                 }}
-                className="px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+                className="px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 Exit Session
               </button>
               <button
                 onClick={handleNextQuestion}
-                className="px-8 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-2xl font-medium hover:from-red-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center space-x-2"
+                className="px-8 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-2xl font-medium hover:from-red-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2"
               >
                 <span>{currentQuestion === questions.length - 1 ? 'Finish Interview' : 'Next Question'}</span>
                 <Zap className="h-4 w-4" />

@@ -244,7 +244,7 @@ const JobTracker: React.FC<JobTrackerProps> = ({ onProgress }) => {
                 value={newApplication.salary}
                 onChange={(e) => setNewApplication({...newApplication, salary: e.target.value})}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., $120,000 - $150,000"
+                placeholder="e.g., ₹12,00,000 - ₹15,00,000"
               />
             </div>
             <div>
@@ -256,7 +256,7 @@ const JobTracker: React.FC<JobTrackerProps> = ({ onProgress }) => {
                 value={newApplication.location}
                 onChange={(e) => setNewApplication({...newApplication, location: e.target.value})}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., San Francisco, CA"
+                placeholder="e.g., Bangalore, India"
               />
             </div>
             <div className="md:col-span-2">
