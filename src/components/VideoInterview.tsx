@@ -43,10 +43,22 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
   const [timeRemaining, setTimeRemaining] = useState(120);
   const [selectedRole, setSelectedRole] = useState(analysisData?.targetRole || 'Frontend Developer');
   const [selectedLevel, setSelectedLevel] = useState(analysisData?.experienceLevel || 'Mid-level');
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [audioAnalysis, setAudioAnalysis] = useState<{
+    confidence: number;
+    clarity: number;
+    pace: number;
+    volume: number;
+  } | null>(null);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Enhanced question bank with ideal responses
   const questionBank = {
@@ -235,16 +247,16 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
 
   if (sessionComplete && aiScores) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
-        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-6 shadow-lg animate-bounce">
               <Award className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               AI Video Interview Complete!
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
+            <p className="text-xl text-gray-700 dark:text-gray-200">
               Here's your comprehensive AI-evaluated performance analysis
             </p>
           </div>
@@ -254,15 +266,15 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
             <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 shadow-lg">
               <span className="text-4xl font-bold text-white">{aiScores.overall}</span>
             </div>
-            <p className="text-lg text-gray-600 dark:text-gray-300">Overall AI Score</p>
+            <p className="text-lg text-gray-700 dark:text-gray-200">Overall AI Score</p>
           </div>
 
           {/* Score Breakdown */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
               <div className="text-3xl font-bold text-blue-600 dark:text-blue-300">{aiScores.technical}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Technical Knowledge</div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+              <div className="text-sm text-gray-600 dark:text-gray-300">Technical Knowledge</div>
+              <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mt-2">
                 <div 
                   className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
                   style={{ width: `${aiScores.technical}%` }}
@@ -271,8 +283,8 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
             </div>
             <div className="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl">
               <div className="text-3xl font-bold text-green-600 dark:text-green-300">{aiScores.communication}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Communication</div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+              <div className="text-sm text-gray-600 dark:text-gray-300">Communication</div>
+              <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mt-2">
                 <div 
                   className="bg-green-600 h-2 rounded-full transition-all duration-1000"
                   style={{ width: `${aiScores.communication}%` }}
@@ -281,29 +293,67 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
             </div>
             <div className="text-center p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
               <div className="text-3xl font-bold text-purple-600 dark:text-purple-300">{aiScores.confidence}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Confidence & Delivery</div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+              <div className="text-sm text-gray-600 dark:text-gray-300">Confidence & Delivery</div>
+              <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mt-2">
                 <div 
                   className="bg-purple-600 h-2 rounded-full transition-all duration-1000"
                   style={{ width: `${aiScores.confidence}%` }}
                 />
               </div>
             </div>
+            {aiScores.audioAnalysis && (
+              <div className="text-center p-6 bg-orange-50 dark:bg-orange-900/20 rounded-2xl">
+                <div className="text-3xl font-bold text-orange-600 dark:text-orange-300">{aiScores.audioAnalysis.clarity}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Voice Clarity</div>
+                <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mt-2">
+                  <div 
+                    className="bg-orange-600 h-2 rounded-full transition-all duration-1000"
+                    style={{ width: `${aiScores.audioAnalysis.clarity}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Real Audio Analysis Results */}
+          {aiScores.audioAnalysis && (
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 mb-8 border border-green-200/50 dark:border-green-800/50">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-800/50 rounded-full">
+                  <Mic className="h-4 w-4 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-green-800 dark:text-green-300">Real Voice Analysis Results</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{aiScores.audioAnalysis.volume}%</div>
+                  <div className="text-sm text-green-700 dark:text-green-300">Voice Volume</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{aiScores.audioAnalysis.clarity}%</div>
+                  <div className="text-sm text-green-700 dark:text-green-300">Speech Clarity</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{aiScores.audioAnalysis.confidence}%</div>
+                  <div className="text-sm text-green-700 dark:text-green-300">Delivery Confidence</div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Question-by-Question Analysis */}
           <div className="space-y-6 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Detailed Question Analysis
             </h2>
             {questions.map((question, index) => (
-              <div key={index} className="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
+              <div key={index} className="bg-gray-50 dark:bg-gray-700/30 rounded-2xl p-6 border border-gray-200/50 dark:border-gray-600/50">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
                       Question {index + 1}: {question.question}
                     </h3>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300">
                       <span className={`px-2 py-1 rounded-full ${
                         question.difficulty === 'Hard' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
                         question.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
@@ -318,27 +368,27 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
                     <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {aiScores.individual[index]}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">AI Score</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">AI Score</div>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Your Response:</h4>
-                    <p className="text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700/50 p-4 rounded-lg">
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Your Response:</h4>
+                    <p className="text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700/30 p-4 rounded-lg border border-gray-200/50 dark:border-gray-600/50">
                       {responses[index] || "No response recorded"}
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
                       <Lightbulb className="inline h-4 w-4 mr-1" />
                       Ideal Response:
                     </h4>
-                    <p className="text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg text-sm">
+                    <p className="text-gray-700 dark:text-gray-200 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg text-sm border border-blue-200/50 dark:border-blue-800/50">
                       {question.idealResponse}
                     </p>
                     <div className="mt-3">
-                      <h5 className="font-medium text-gray-900 dark:text-white mb-2">Key Points to Cover:</h5>
+                      <h5 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Key Points to Cover:</h5>
                       <div className="flex flex-wrap gap-2">
                         {question.keyPoints.map((point, pointIndex) => (
                           <span key={pointIndex} className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 rounded-full text-sm">
@@ -354,26 +404,30 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
           </div>
 
           {/* AI Recommendations */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 mb-8 border border-purple-200 dark:border-purple-700">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 mb-8 border border-purple-200/50 dark:border-purple-700/50">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               <Brain className="inline h-6 w-6 mr-2" />
               AI-Powered Recommendations
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-semibold text-green-800 dark:text-green-400 mb-2">✅ Strengths</h3>
+                <h3 className="font-semibold text-green-800 dark:text-green-300 mb-2">✅ Strengths</h3>
                 <ul className="space-y-1 text-green-700 dark:text-green-200">
                   {aiScores.technical > 80 && <li>• Strong technical knowledge demonstrated</li>}
                   {aiScores.communication > 75 && <li>• Clear and articulate communication</li>}
                   {aiScores.confidence > 70 && <li>• Confident delivery and presentation</li>}
+                  {aiScores.audioAnalysis && aiScores.audioAnalysis.clarity > 70 && <li>• Excellent voice clarity and pronunciation</li>}
+                  {aiScores.audioAnalysis && aiScores.audioAnalysis.volume > 60 && <li>• Good voice projection and volume</li>}
                   <li>• Good understanding of {selectedRole.toLowerCase()} concepts</li>
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold text-orange-800 dark:text-orange-400 mb-2">🎯 Areas for Improvement</h3>
+                <h3 className="font-semibold text-orange-800 dark:text-orange-300 mb-2">🎯 Areas for Improvement</h3>
                 <ul className="space-y-1 text-orange-700 dark:text-orange-200">
                   {aiScores.technical < 70 && <li>• Strengthen technical knowledge in core areas</li>}
                   {aiScores.communication < 70 && <li>• Practice explaining concepts more clearly</li>}
+                  {aiScores.audioAnalysis && aiScores.audioAnalysis.volume < 40 && <li>• Speak louder and with more confidence</li>}
+                  {aiScores.audioAnalysis && aiScores.audioAnalysis.clarity < 60 && <li>• Improve speech clarity and pronunciation</li>}
                   <li>• Include more specific examples and metrics</li>
                   <li>• Practice structured response formats (STAR method)</li>
                 </ul>
@@ -390,13 +444,15 @@ const VideoInterview: React.FC<VideoInterviewProps> = ({ onProgress, analysisDat
                 setCurrentQuestion(0);
                 setResponses([]);
                 setCurrentResponse('');
+                setTranscript('');
+                setAudioAnalysis(null);
               }}
               className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
             >
               <RotateCcw className="h-5 w-5" />
               <span>Practice Again</span>
             </button>
-            <button className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <button className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
               Download Report
             </button>
           </div>
