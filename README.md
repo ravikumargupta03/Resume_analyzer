@@ -31,25 +31,37 @@ Version Control	Git & GitHub
 Hosting (Optional)	Vercel / Render / Hugging Face Spaces
 📁 Project Structure
 AI-Career-Resume-Analyzer/
+
 │
 ├── frontend/                  # React Frontend
+
 │   ├── src/
+
 │   │   ├── components/        # UI Components
+
 │   │   ├── pages/             # Different sections (Home, Upload, Results)
+
 │   │   └── App.jsx
+
 │   └── package.json
+
 │
 ├── backend/                   # Backend API
+
 │   ├── model/                 # ML model files
+
 │   ├── app.py                 # Flask/FastAPI main file
+
 │   └── requirements.txt
+
 │
 ├── README.md
+
 └── .gitignore
 
 ⚙️ Installation & Setup
 🔹 1. Clone the repository
-git clone https://github.com/yourusername/AI-Career-Resume-Analyzer.git
+git clone https://github.com/ravikumargupta03/AI-Career-Resume-Analyzer.git
 cd AI-Career-Resume-Analyzer
 
 🔹 2. Set up backend
